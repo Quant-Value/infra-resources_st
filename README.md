@@ -12,3 +12,11 @@ Este repositorio contiene los recursos necesarios para la infraestructura base d
    ```bash
    git clone https://github.com/<user>/infra-resources.git
 
+
+
+
+   terraform init
+   terraform plan
+   terraform apply
+   terraform destroy
+
