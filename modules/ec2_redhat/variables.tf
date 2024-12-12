@@ -16,8 +16,3 @@ variable "instance_type" {
   type        = string
   #default     = "c5.large"  # Valor por defecto para el tipo de instancia
 }
-
-variable "bucket_name" {
-  description = "Nombre del bucket S3"
-  type        = string
-}

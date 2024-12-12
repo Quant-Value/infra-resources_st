@@ -1,20 +1,13 @@
-# Crear un bucket S3
-resource "aws_s3_bucket" "my_bucket" {
-  bucket = var.bucket_name  # Usamos el nombre del bucket desde una variable
-
-  # Habilitar la versión de los objetos del bucket (opcional)
-  versioning {
-    enabled = false
-  }
+module "bucket_s3" {
+  source      = "../modules/bucket_s3"
+  aws_region  = var.aws_region    # Pasa la variable aws_region
+  bucket_name = var.bucket_name   # Pasa la variable bucket_name
 }
 
-# Crear una instancia EC2 con el tipo c5.large y una AMI de Red Hat
-resource "aws_instance" "redhat_instance" {
-  ami           = var.ami_id  # Usamos la variable de la AMI
-  instance_type = var.instance_type  # Usamos la variable del tipo de instancia
-
-  # Configurar las etiquetas de la instancia
-  tags = {
-    Name = "RedHatInstance"
-  }
+module "ec2_redhat" {
+  source       = "../modules/ec2_redhat"
+  aws_region   = var.aws_region   # Pasa la variable aws_region
+  instance_type = var.instance_type # Pasa la variable instance_type
+  ami_id        = var.ami_id       # Pasa la variable ami_id
 }
+
