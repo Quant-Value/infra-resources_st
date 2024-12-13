@@ -21,3 +21,9 @@ variable "bucket_name" {
   description = "Nombre del bucket S3"
   type        = string
 }
+
+variable "acl" {
+  description = "Política de acceso al bucket"
+  type        = string
+  default     = "private"  # Valor por defecto para la política de acceso
+}

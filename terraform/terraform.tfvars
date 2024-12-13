@@ -4,3 +4,4 @@ aws_region    = "eu-west-3"                             # Región (puede ser con
 bucket_name   = "proyect-1-stb-devops-bucket-terraform" # Nombre del bucket S3 (asegúrate de que sea único)
 ami_id        = "ami-0574a94188d1b84a1"                 # Aquí pones la AMI de Red Hat para la región eu-west-3
 instance_type = "c5.large"                              # Tipo de instancia, si deseas cambiarlo
+acl           =  "public-read"
