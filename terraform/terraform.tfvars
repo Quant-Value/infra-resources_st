@@ -5,3 +5,4 @@ bucket_name   = "proyect-1-stb-devops-bucket-terraform" # Nombre del bucket S3 (
 ami_id        = "ami-0574a94188d1b84a1"                 # Aquí pones la AMI de Red Hat para la región eu-west-3
 instance_type = "c5.large"                              # Tipo de instancia, si deseas cambiarlo
 acl           =  "public-read"
+#s3_bucket_backend  = "proyect-1-stb-devops-bucket"  # Nombre de tu bucket

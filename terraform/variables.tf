@@ -27,3 +27,8 @@ variable "acl" {
   type        = string
   default     = "private"  # Valor por defecto para la política de acceso
 }
+/*
+variable "s3_bucket_backend" {
+  description = "The name of the S3 bucket"
+  type        = string
+}*/
