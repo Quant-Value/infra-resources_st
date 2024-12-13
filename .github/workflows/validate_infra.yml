@@ -9,48 +9,41 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    # Define una variable de entorno para el directorio de trabajo
+    env:
+      TF_WORKING_DIR: ./terraform  # Aquí defines tu directorio
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
     - name: Install Terraform
       run: |
-        # Actualizar y asegurarse de que las dependencias necesarias estén instaladas
         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-
-        # Instalar la clave GPG de HashiCorp
         wget -O- https://apt.releases.hashicorp.com/gpg | \
         gpg --dearmor | \
         sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-
-        # Verificar la huella digital de la clave GPG (opcional)
         gpg --no-default-keyring \
         --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
         --fingerprint
-
-        # Agregar el repositorio de HashiCorp a la lista de fuentes
         echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
         https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
         sudo tee /etc/apt/sources.list.d/hashicorp.list
-
-        # Actualizar la lista de paquetes para incluir HashiCorp
         sudo apt update
-
-        # Instalar Terraform
         sudo apt-get install terraform
 
     - name: Terraform Init
       run: terraform init
-      working-directory: ./ # Ajusta el directorio si es necesario
+      working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Terraform Plan
       run: terraform plan
-      working-directory: ./ # Ajusta el directorio si es necesario
+      working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Deploy with Terraform
       run: terraform apply -auto-approve
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }} # Añadir el token de sesión
-      working-directory: ./ # Ajusta el directorio si es necesario
+        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
