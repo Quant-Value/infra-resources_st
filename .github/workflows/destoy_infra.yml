@@ -2,22 +2,33 @@ name: Destroy Infrastructure
 
 on:
   workflow_dispatch:  # Este evento permite disparar el flujo manualmente desde la interfaz de GitHub Actions
-  # Si prefieres que se ejecute automáticamente en algún evento específico, puedes cambiar esto, como por ejemplo:
-  # push:
-  #   branches:
-  #     - main
 
 jobs:
   destroy:
     runs-on: ubuntu-latest
     env:
       TF_WORKING_DIR: ./terraform  # Aquí defines tu directorio
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
+
+    - name: Install jq and Parse User Info
+      run: |
+        # Instala jq para parsear el JSON
+        sudo apt-get install jq
+
+        # Obtén el nombre del autor del commit (por ejemplo, GitHub Actor o un campo personalizado)
+        USERNAME="${GITHUB_ACTOR}"
+
+        # Obtén las credenciales de AWS desde el JSON basado en el autor del commit
+        AWS_ACCESS_KEY_ID=$(jq -r ".\"$USERNAME\".AWS_ACCESS_KEY_ID" ./docs/users.json)
+        AWS_SECRET_ACCESS_KEY=$(jq -r ".\"$USERNAME\".AWS_SECRET_ACCESS_KEY" ./docs/users.json)
+        AWS_SESSION_TOKEN=$(jq -r ".\"$USERNAME\".AWS_SESSION_TOKEN" ./docs/users.json)
+
+        # Exportar las variables para usarlas en pasos posteriores
+        echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
+        echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
 
     - name: Install Terraform
       run: |
@@ -35,8 +46,7 @@ jobs:
         sudo apt-get install terraform
 
     - name: Terraform Init
-      run: terraform init 
-      #-backend-config="bucket=${{ secrets.S3_BUCKET_BACKEND }}" -backend-config="region=${{ secrets.AWS_REGION }}"
+      run: terraform init
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Terraform Plan (Destroy)
@@ -46,4 +56,3 @@ jobs:
     - name: Destroy Infrastructure
       run: terraform destroy -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
-
