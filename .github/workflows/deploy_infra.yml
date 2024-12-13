@@ -70,6 +70,8 @@ jobs:
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
 
         aws s3 ls
+        aws sts get-caller-identity
+      shell: bash
 
     - name: Install Terraform
       run: |
