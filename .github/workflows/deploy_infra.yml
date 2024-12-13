@@ -69,8 +69,11 @@ jobs:
         export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
 
+        aws s3 ls
+
     - name: Install Terraform
       run: |
+        aws s3 ls
         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
         wget -O- https://apt.releases.hashicorp.com/gpg | \
         gpg --dearmor | \
