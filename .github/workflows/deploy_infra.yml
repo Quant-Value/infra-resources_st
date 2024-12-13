@@ -31,9 +31,7 @@ jobs:
         sudo apt-get install terraform
 
     - name: Terraform Init
-      run: terraform init \
-          -backend-config="bucket=${{ secrets.S3_BUCKET_BACKEND }}" \
-          -backend-config="region=${{ secrets.AWS_REGION }}"
+      run: terraform init -backend-config="bucket=${{ secrets.S3_BUCKET_BACKEND }}" -backend-config="region=${{ secrets.AWS_REGION }}"
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Terraform Plan
