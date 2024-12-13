@@ -1,13 +1,51 @@
 name: Deploy Infrastructure
 
 on:
-  #workflow_dispatch:
-  workflow_run:
-    workflows: [dinamic_secrets.yml]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Prepare Dynamic Secret Names
+        id: prepare
+        run: |
+          # Leer el archivo users.json para obtener los valores correspondientes al usuario
+          USERNAME=$(jq -r ".${GITHUB_ACTOR}" ./docs/users.json)
+
+          # Verificar si el USERNAME se ha encontrado
+          if [ -z "$USERNAME" ]; then
+            echo "El nombre de usuario no se encuentra en el archivo users.json"
+            exit 1
+          fi
+
+          # Extraer los valores de AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, y AWS_SESSION_TOKEN para el usuario
+          AWS_ACCESS_KEY_ID_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_ACCESS_KEY_ID')
+          AWS_SECRET_ACCESS_KEY_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_SECRET_ACCESS_KEY')
+          AWS_SESSION_TOKEN_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_SESSION_TOKEN')
+          
+          echo "AWS_ACCESS_KEY_ID_NAME: $AWS_ACCESS_KEY_ID_NAME_AUX"
+          echo "AWS_SECRET_ACCESS_KEY_NAME: $AWS_SECRET_ACCESS_KEY_NAME_AUX"
+          echo "AWS_SESSION_TOKEN_NAME: $AWS_SESSION_TOKEN_NAME_AUX"
+          
+          echo "::set-output name=aws_access_key_id_name::${AWS_ACCESS_KEY_ID_NAME_AUX}"
+          echo "::set-output name=aws_secret_access_key_name::${AWS_SECRET_ACCESS_KEY_NAME_AUX}"
+          echo "::set-output name=aws_session_token_name::${AWS_SESSION_TOKEN_NAME_AUX}"
+
+          # Guardar los valores como variables de entorno
+          #echo "AWS_ACCESS_KEY_ID_NAME=${AWS_ACCESS_KEY_ID_NAME_AUX}" | tee $GITHUB_ENV
+          #echo "AWS_SECRET_ACCESS_KEY_NAME=${AWS_SECRET_ACCESS_KEY_NAME_AUX}" | tee $GITHUB_ENV
+          #echo "AWS_SESSION_TOKEN_NAME=${AWS_SESSION_TOKEN_NAME_AUX}" | tee $GITHUB_ENV
+
+    outputs:
+      aws_access_key_id_name: ${{ steps.prepare.outputs.AWS_ACCESS_KEY_ID_NAME }}
+      aws_secret_access_key_name: ${{ steps.prepare.outputs.AWS_SECRET_ACCESS_KEY_NAME }}
+      aws_session_token_name: ${{ steps.prepare.outputs.AWS_SESSION_TOKEN_NAME }}
+      
   deploy:
     runs-on: ubuntu-latest
 
