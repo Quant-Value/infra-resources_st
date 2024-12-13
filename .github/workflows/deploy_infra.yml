@@ -10,38 +10,13 @@ jobs:
     # Define una variable de entorno para el directorio de trabajo
     env:
       TF_WORKING_DIR: ./terraform  # Aquí defines tu directorio
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
-
-    - name: Install jq and Parse User Info
-      run: |
-        # Instala jq para parsear el JSON
-        sudo apt-get install jq
-
-        # Obtén el nombre del autor del commit (por ejemplo, GitHub Actor o un campo personalizado)
-        USERNAME="${GITHUB_ACTOR}"
-
-        # Obtener el nombre del secreto de AWS para el usuario (mapeo desde el archivo JSON)
-        AWS_ACCESS_KEY_ID_SECRET=$(jq -r ".\"$USERNAME\".AWS_ACCESS_KEY_ID" ./docs/users.json)
-        AWS_SECRET_ACCESS_KEY_SECRET=$(jq -r ".\"$USERNAME\".AWS_SECRET_ACCESS_KEY" ./docs/users.json)
-        AWS_SESSION_TOKEN_SECRET=$(jq -r ".\"$USERNAME\".AWS_SESSION_TOKEN" ./docs/users.json)
-
-        # Obtener los valores de los secretos de GitHub basados en el nombre del secreto
-        AWS_ACCESS_KEY_ID="${{ secrets[$AWS_ACCESS_KEY_ID_SECRET] }}"
-        AWS_SECRET_ACCESS_KEY="${{ secrets[$AWS_SECRET_ACCESS_KEY_SECRET] }}"
-        AWS_SESSION_TOKEN="${{ secrets[$AWS_SESSION_TOKEN_SECRET] }}"
-
-        # Exportar las variables para usarlas en pasos posteriores
-        echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> $GITHUB_ENV
-        echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
-        echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
-
-        # Imprimir las credenciales para debug (solo se hará si el paso se ejecuta correctamente)
-        echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-        echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
-        echo "AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN"
 
     - name: Install Terraform
       run: |
@@ -59,7 +34,7 @@ jobs:
         sudo apt-get install terraform
 
     - name: Terraform Init
-      run: terraform init
+      run: terraform init 
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Terraform Validate
