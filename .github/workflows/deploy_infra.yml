@@ -45,8 +45,9 @@ jobs:
       aws_access_key_id_name: ${{ steps.prepare.outputs.AWS_ACCESS_KEY_ID_NAME }}
       aws_secret_access_key_name: ${{ steps.prepare.outputs.AWS_SECRET_ACCESS_KEY_NAME }}
       aws_session_token_name: ${{ steps.prepare.outputs.AWS_SESSION_TOKEN_NAME }}
-      
+
   deploy:
+    needs: prepare
     runs-on: ubuntu-latest
 
     # Define una variable de entorno para el directorio de trabajo

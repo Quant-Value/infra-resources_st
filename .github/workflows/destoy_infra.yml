@@ -48,6 +48,7 @@ jobs:
       aws_session_token_name: ${{ steps.prepare.outputs.AWS_SESSION_TOKEN_NAME }}
     
   deploy:
+    needs: prepare
     runs-on: ubuntu-latest
 
     # Define una variable de entorno para el directorio de trabajo
