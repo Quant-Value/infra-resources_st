@@ -35,6 +35,11 @@ jobs:
         echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> $GITHUB_ENV
         echo "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" >> $GITHUB_ENV
 
+        # Guardar las credenciales en un archivo para debug
+        echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID" > aws_credentials_debug.txt
+        echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY" >> aws_credentials_debug.txt
+        echo "AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN" >> aws_credentials_debug.txt
+
     - name: Install Terraform
       run: |
         sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
