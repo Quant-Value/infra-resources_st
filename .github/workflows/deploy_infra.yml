@@ -65,9 +65,9 @@ jobs:
       run: |
         # Usamos los nombres de los secretos obtenidos dinámicamente
         echo "Fetching AWS credentials from secrets..."
-        export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
-        export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
-        export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
+        #export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
+        #export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
+        #export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
 
         #aws s3 ls
         #aws sts get-caller-identity
@@ -93,32 +93,36 @@ jobs:
         export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
         export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
+        echo "init"
         terraform init
+        echo "validate"
         terraform validate
+        echo "plan"
         terraform plan
+        echo "apply"
         terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 # a partir de aqui va a fallar -------------------------------------------------------------------------------------------------
     - name: Terraform Validate
       run: |
-        export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
-        export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
-        export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
+        #export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
+        #export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
+        #export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         terraform validate
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Terraform Plan
       run: |
-        export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
-        export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
-        export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
+        #export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
+        #export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
+        #export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         terraform plan
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
 
     - name: Deploy with Terraform
       run: |
-        export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
-        export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
-        export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
+        #export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
+        #export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
+        #export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
