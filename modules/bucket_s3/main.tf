@@ -6,6 +6,9 @@ resource "aws_s3_bucket" "my_bucket" {
   versioning {
     enabled = false
   }
+  lifecycle {#con esto no deja destruir
+    prevent_destroy = false
+  }
 }
 
 
