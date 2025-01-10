@@ -18,5 +18,15 @@ Este repositorio contiene los recursos necesarios para la infraestructura base d
    terraform init
    terraform plan
    terraform apply
-   terraform destroy
+   terraform destroy -auto-approve
+
+
+   terraform apply -auto-approve
+
+
+
+ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@15.237.202.141 "ls /tmp"
+
+
+
 

@@ -1,0 +1,49 @@
+---
+- name: Instalar y configurar NGINX en servidores
+  hosts: web_servers  # El grupo de hosts donde quieres instalar NGINX
+  become: yes  # Usar sudo para obtener privilegios elevados
+
+  tasks:
+    - name: Actualizar la lista de paquetes
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600  # Mantener la caché de apt durante 1 hora
+
+    - name: Instalar NGINX
+      apt:
+        name: nginx
+        state: present
+
+    - name: Iniciar NGINX
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Asegurarse de que NGINX esté corriendo
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      become: yes
+    - name: Crear directorio de NGINX si no existe
+      file:
+        path: /var/www/html
+        state: directory
+        mode: '0755'
+    - name: Copiar archivo styles.css
+      copy:
+        src: ../templates/styles.css  # Ruta al archivo styles.css en tu máquina local
+        dest: /var/www/html/styles.css
+        mode: '0644'
+
+    - name: Copiar archivo index.html personalizado
+      copy:
+        src: ../templates/index.html  # Ruta al archivo en tu máquina local
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Recargar NGINX para aplicar cambios
+      systemd:
+        name: nginx
+        state: reloaded
