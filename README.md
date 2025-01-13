@@ -28,5 +28,10 @@ Este repositorio contiene los recursos necesarios para la infraestructura base d
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@15.237.202.141 "ls /tmp"
 
 
+terragrunt run-all init && terragrunt run-all plan && terragrunt run-all apply --terragrunt-non-interactive
+
+terragrunt run-all destroy --terragrunt-non-interactive
+
+
 
 

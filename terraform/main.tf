@@ -1,12 +1,12 @@
 
-/*
+/**/
 
 module "bucket_s3" {
   source      = "../modules/bucket_s3"
   aws_region  = var.aws_region    # Pasa la variable aws_region
   bucket_name = var.bucket_name   # Pasa la variable bucket_name
 }
-
+/*
 module "ec2_redhat" {
   source       = "../modules/ec2_redhat"
   aws_region   = var.aws_region   # Pasa la variable aws_region
@@ -82,6 +82,7 @@ module "lambda" {
   source      = "../modules/lambda"
 }
 */
+/*
 
 module "ec2_with_rds {
   source       = "../modules/ec2_with_rds"
@@ -98,4 +99,4 @@ output "rds_endpoint"{
   
   value = module.ec2_with_rds.rds_endpoint
 
-}
+}*/

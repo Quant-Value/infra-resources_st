@@ -58,3 +58,7 @@ variable "private_key_path" {
   description = "Ruta al archivo privado de la clave SSH"
   type        = string
 }
+variable "backend_bucket_name" {
+  description = "Nombre del bucket S3"
+  type        = string
+}
