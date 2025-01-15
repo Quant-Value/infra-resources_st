@@ -72,3 +72,8 @@ variable "is_pipeline" {
   type        = bool
   default     = false  # Valor por defecto, si no se pasa valor, no se crea la réplica
 }
+variable "private_key" {
+  type        = string
+  description = "Private SSH key for EC2 access"
+  sensitive   = true
+}

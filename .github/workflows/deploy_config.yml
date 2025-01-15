@@ -56,7 +56,8 @@ jobs:
 
     # Define una variable de entorno para el directorio de trabajo
     env:
-      #TF_WORKING_DIR:  # Aquí defines tu directorio
+      TF_WORKING_DIR: ./terarform # Aquí defines tu directorio
+      TF_WORKING_DIR2: ./modules/wordpress/ansible # Aquí defines tu directorio
       AWS_ACCESS_KEY_ID: ${{ needs.prepare.outputs.aws_access_key_id_name }}
       AWS_SECRET_ACCESS_KEY: ${{ needs.prepare.outputs.aws_secret_access_key_name }}
       AWS_SESSION_TOKEN: ${{ needs.prepare.outputs.aws_session_token_name }}
@@ -74,11 +75,10 @@ jobs:
         sudo apt update
         sudo apt install -y python3 python3-pip
     
-    - name: Setup SSH key for Ansible
+    - name: Set up SSH private key
       run: |
-
-          echo "${{ secrets[env.AWS_SESSION_TOKEN] }}" > id_rsa
-          chmod 600 id_rsa
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
 
     - name: Terraform Init
@@ -89,7 +89,6 @@ jobs:
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         pwd
         ls -lah
-        cd terraform
         echo "init"
         terraform init
         echo "validate"
@@ -99,6 +98,8 @@ jobs:
         echo "apply"
         terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
+      env:
+          TF_VAR_private_key: ~/.ssh/id_rsa # Pasamos la clave privada como variable de entorno
 
       # Paso 2: Instalar Ansible
     - name: Install Ansible
@@ -116,3 +117,6 @@ jobs:
           cd /modules/wordpress/ansible
           ansible-playbook -i hosts.ini install1.yml
           ansible-playbook -i hosts.ini php_config.yml
+      working-directory: ${{ env.TF_WORKING_DIR2 }}  # Usando la variable de entorno
+      env:
+        TF_VAR_private_key: ~/.ssh/id_rsa # Pasamos la clave privada como variable de entorno
