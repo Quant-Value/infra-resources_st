@@ -114,7 +114,7 @@ jobs:
           echo "Current working directory: $(pwd)"
           ls -l
           export ANSIBLE_CONFIG=ansible.cfg
-          cd /modules/wordpress/ansible
+
           ansible-playbook -i hosts.ini install1.yml
           ansible-playbook -i hosts.ini php_config.yml
       working-directory: ${{ env.TF_WORKING_DIR2 }}  # Usando la variable de entorno
