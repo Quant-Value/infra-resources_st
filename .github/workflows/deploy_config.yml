@@ -76,12 +76,10 @@ jobs:
     
     - name: Setup SSH key for Ansible
       run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets[env.AWS_SESSION_TOKEN] }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          # Opcional: Configurar el host conocido para evitar la advertencia de SSH
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-            # Paso 4: Ejecutar los playbooks de Ansible
+
+          echo "${{ secrets[env.AWS_SESSION_TOKEN] }}" > id_rsa
+          chmod 600 id_rsa
+
 
     - name: Terraform Init
       run: |

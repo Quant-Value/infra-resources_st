@@ -66,3 +66,9 @@ variable "tag_value" {
   description = "El valor del tag para el recurso"
   type        = string
 }
+
+variable "is_pipeline" {
+  description = "Indica si se debe crear una réplica de la base de datos"
+  type        = bool
+  default     = false  # Valor por defecto, si no se pasa valor, no se crea la réplica
+}

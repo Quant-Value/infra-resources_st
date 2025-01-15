@@ -195,7 +195,7 @@ resource "aws_instance" "my_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"  # Usa "ec2-user" para AMIs de Amazon Linux, "ubuntu" para AMIs de Ubuntu
-      private_key = file(var.private_key_path)  # Ruta a tu clave privada en tu máquina local
+      private_key = file(var.is_pipeline?"../id_rsa" :var.private_key_path)  # Ruta a tu clave privada en tu máquina local
       host        = self.public_ip  # La IP pública de la instancia
     }
 
