@@ -1,0 +1,93 @@
+- hosts: all
+  become: yes
+  gather_facts: true
+
+  tasks:
+    - name: Create directory for Docker's GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker Repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+        state: present
+        filename: "docker.list"
+        update_cache: true
+
+    - name: Update and upgrade all packages to the latest version
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+        
+    - name: Install Docker Compose version 2.30.0
+      ansible.builtin.shell:
+        cmd: |
+          mkdir -p ~/.docker/cli-plugins/
+          curl -SL https://github.com/docker/compose/releases/download/v2.30.0/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+          chmod +x ~/.docker/cli-plugins/docker-compose
+        creates: ~/.docker/cli-plugins/docker-compose
+      become_user: ubuntu  # Ejecutar como el usuario "ubuntu"
+    
+    - name: Verify Docker Compose installation
+      ansible.builtin.command:
+        cmd: docker compose version
+      register: docker_compose_version
+      ignore_errors: yes
+      become: yes
+
+    - name: Debug Docker Compose version
+      ansible.builtin.debug:
+        var: docker_compose_version.stdout
+
+    - name: Add remote "ubuntu" user to "docker" group
+      user:
+        name: "ubuntu"
+        group: "docker"
+        append: yes
+
+    - name: Copy docker-compose.yml to the server
+      copy:
+        src: ../docker-compose.yml  # Ruta al archivo docker-compose.yml local
+        dest: /home/ubuntu/docker-compose.yml
+        mode: '0644'
+
+    - name: Install Docker SDK for Python (docker-py)
+      pip:
+        name: docker
+        state: present
+
+    - name: Start Docker containers using Docker Compose (v2)
+      ansible.builtin.shell:
+        cmd: docker compose -f /home/ubuntu/docker-compose.yml up -d
+

@@ -31,7 +31,7 @@ variable "acl" {
 variable "db_username" {
   type = string
   default = ""
-  sensitive = true  # Esto marca la variable como sensible
+  sensitive= true  # Esto marca la variable como sensible
 }
 
 variable "db_password" {
@@ -60,5 +60,9 @@ variable "private_key_path" {
 }
 variable "backend_bucket_name" {
   description = "Nombre del bucket S3"
+  type        = string
+}
+variable "tag_value" {
+  description = "El valor del tag para el recurso"
   type        = string
 }

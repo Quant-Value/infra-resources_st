@@ -1,11 +1,11 @@
 
-/**/
+/*
 
 module "bucket_s3" {
   source      = "../modules/bucket_s3"
   aws_region  = var.aws_region    # Pasa la variable aws_region
   bucket_name = var.bucket_name   # Pasa la variable bucket_name
-}
+}*/
 /*
 module "ec2_redhat" {
   source       = "../modules/ec2_redhat"
@@ -82,21 +82,32 @@ module "lambda" {
   source      = "../modules/lambda"
 }
 */
-/*
 
-module "ec2_with_rds {
-  source       = "../modules/ec2_with_rds"
-  aws_region   = var.aws_region   # Pasa la variable aws_region
+
+module "ec2_wordpress" {
+  source       = "../modules/wordpress"
+  #aws_region   = var.aws_region   # Pasa la variable aws_region
   instance_type = var.instance_type # Pasa la variable instance_type
   ami_id        = var.ami_id       # Pasa la variable ami_id
   private_key_path=var.private_key_path
+  tag_value=var.tag_value
 }
 output "instance_public_ip" {
   description = "Public IP of the EC2 instance"
-  value       = module.ec2_with_rds.public_ip
+  value       = module.ec2_wordpress.ec2_public_ip
 }
+output "rds_user"{
+  value = module.ec2_wordpress.rds_user
+  sensitive=true
+}
+
+output "rds_password"{
+  value = module.ec2_wordpress.rds_password
+  sensitive=true
+}
+/*
 output "rds_endpoint"{
   
-  value = module.ec2_with_rds.rds_endpoint
+  value = module.ec2_wordpress.rds_endpoint
 
 }*/

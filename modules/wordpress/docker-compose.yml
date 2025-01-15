@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  apache:
+    image: httpd:latest
+    container_name: apache-container
+    ports:
+      - "80:80"
+    volumes:
+      - ./wordpress:/var/www/html  # Carpeta local con los archivos de WordPress (si es necesario)
+    networks:
+      - wordpress_network
+    restart: always
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress-container
+    environment:
+      WORDPRESS_DB_HOST: "{{ rds_endpoint }}"  # Sustituyendo {{ rds_endpoint }} con la variable desde vars.yml
+      WORDPRESS_DB_NAME: "{{ db_name }}"
+      WORDPRESS_DB_USER: "{{ db_user }}"
+      WORDPRESS_DB_PASSWORD: "{{ db_password }}"
+    volumes:
+      - ./wordpress:/var/www/html  # Carpeta local con los archivos de WordPress (si es necesario)
+    networks:
+      - wordpress_network
+    restart: always
+    depends_on:
+      - apache
+
+networks:
+  wordpress_network:
+    driver: bridge

@@ -1,0 +1,36 @@
+<?php
+// ** MySQL settings ** //
+define('DB_NAME', '{{ rds_db_name }}');
+define('DB_USER', '{{ rds_username }}');
+define('DB_PASSWORD', '{{ rds_password}}');
+define('DB_HOST', '{{ db_host }}');
+define('DB_CHARSET', 'utf8');
+define('DB_COLLATE', '');
+
+/**#@+
+ 
+* Authentication Unique Keys and Salts.
+*
+* Change these to different unique phrases!
+* You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+* You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+*
+* @since 2.6.0
+*/
+define( 'AUTH_KEY',         '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'SECURE_AUTH_KEY',  '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'LOGGED_IN_KEY',    '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'NONCE_KEY',        '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'AUTH_SALT',        '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'SECURE_AUTH_SALT', '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'LOGGED_IN_SALT',   '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+define( 'NONCE_SALT',       '{{ lookup('password', '/dev/null chars=ascii_letters length=64') }}' );
+ 
+/**#@-*/
+
+// ** WordPress Database Table prefix ** //
+$table_prefix = 'wp_';
+
+// ** Debugging mode ** //
+define('WP_DEBUG', false);
+?>

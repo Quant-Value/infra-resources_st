@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: true
+  vars_files:
+    - vars.yml  # Cargar las variables necesarias
+
+  tasks:
+    - name: Ensure wp-config.php is present with correct settings
+      ansible.builtin.template:
+        src: ../wp-config.php.j2  # Ruta a la plantilla Jinja2
+        dest: /home/ubuntu/wp-config.php  # Ruta donde se generará el archivo wp-config.php
+        mode: '0644'
+      vars:
+        db_name: "{{ rds_db_name }}"
+        db_user: "{{ rds_username }}"
+        db_password: "{{ rds_password }}"
+        db_host: "{{ rds_endpoint }}"
+
+    - name: Ensure wp-config.php is present with correct settings
+      template:
+        src: wp-config.php.j2
+        dest: /tmp/wp-config.php  # Ruta temporal en el servidor
+      become: yes
+
+    - name: Copy wp-config.php to the WordPress container
+      community.docker.docker_container:
+        name: wordpress_container  # Cambia por el nombre correcto de tu contenedor
+        src: /tmp/wp-config.php  # Ruta temporal donde se creó el wp-config.php
+        dest: /var/www/html/wp-config.php  # Ruta dentro del contenedor
+        copy: yes
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      become: yes
+
