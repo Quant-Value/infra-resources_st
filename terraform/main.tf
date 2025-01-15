@@ -91,7 +91,7 @@ module "ec2_wordpress" {
   ami_id        = var.ami_id       # Pasa la variable ami_id
   private_key_path=var.private_key_path
   tag_value=var.tag_value
-  is_pipeline=var.is_pipeline
+
 }
 output "instance_public_ip" {
   description = "Public IP of the EC2 instance"
