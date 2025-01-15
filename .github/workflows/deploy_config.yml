@@ -94,6 +94,8 @@ jobs:
         terraform init
         echo "validate"
         terraform validate
+        ls -l
+        pwd
         echo "apply"
         terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
