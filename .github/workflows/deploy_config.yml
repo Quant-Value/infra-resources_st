@@ -77,7 +77,7 @@ jobs:
     
     - name: Set up SSH private key
       run: |
-          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets[env.AWS_EC2_KEY] }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
 
