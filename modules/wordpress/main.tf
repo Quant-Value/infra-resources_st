@@ -42,7 +42,8 @@ locals {
 
 # Llamar al script Python para obtener el siguiente bloque CIDR disponible
 data "external" "next_subnet" {
-  program = [local.os_target, "${path.module}/calculate_next_subnet.py"]
+  #program = [local.os_target, "${path.module}/calculate_next_subnet.py"]
+  program = [local.os_target, "../modules/wordpress/calculate_next_subnet.py"]
 
   # Pasar los CIDRs de las subredes existentes y el CIDR base
   query = {
