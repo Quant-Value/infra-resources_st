@@ -1,7 +1,7 @@
 # Crear un Key Pair para EC2
 resource "aws_key_pair" "key" {
   key_name   = "my-key-name-${var.tag_value}"
-  public_key = file("id_rsa.pub")  # Ruta de tu clave pública en tu máquina local
+  public_key = file("../id_rsa.pub")  # Ruta de tu clave pública en tu máquina local
 }
 
 # Obtener la VPC por defecto
