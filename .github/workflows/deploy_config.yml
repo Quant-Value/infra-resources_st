@@ -88,14 +88,10 @@ jobs:
         export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
         export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
-        pwd
-        ls -lah
         echo "init"
         terraform init
         echo "validate"
         terraform validate
-        ls -l
-        pwd
         echo "apply"
         terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
@@ -115,6 +111,8 @@ jobs:
 
     - name: Run Ansible Playbooks
       run: |
+          echo "Current working directory: $(pwd)"
+          ls -l
           export ANSIBLE_CONFIG=ansible.cfg
           cd /modules/wordpress/ansible
           ansible-playbook -i hosts.ini install1.yml
