@@ -67,13 +67,4 @@ variable "tag_value" {
   type        = string
 }
 
-variable "is_pipeline" {
-  description = "Indica si se debe crear una réplica de la base de datos"
-  type        = bool
-  default     = false  # Valor por defecto, si no se pasa valor, no se crea la réplica
-}
-variable "private_key" {
-  type        = string
-  description = "Private SSH key for EC2 access"
-  sensitive   = true
-}
+

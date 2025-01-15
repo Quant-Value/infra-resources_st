@@ -15,4 +15,3 @@ vpc_cidr = "10.15.0.0/16"
 private_key_path = "~/.ssh/id_rsa" # Ruta al archivo .pem de la clave privada
 backend_bucket_name= "proyect-1-stb-devops-bucket"
 tag_value="stb"
-is_pipeline=true
