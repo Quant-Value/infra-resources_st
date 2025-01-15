@@ -56,8 +56,8 @@ jobs:
 
     # Define una variable de entorno para el directorio de trabajo
     env:
-      TF_WORKING_DIR: ./terarform # Aquí defines tu directorio
-      TF_WORKING_DIR2: ./modules/wordpress/ansible # Aquí defines tu directorio
+      TF_WORKING_DIR: terarform # Aquí defines tu directorio
+      TF_WORKING_DIR2: modules/wordpress/ansible # Aquí defines tu directorio
       AWS_ACCESS_KEY_ID: ${{ needs.prepare.outputs.aws_access_key_id_name }}
       AWS_SECRET_ACCESS_KEY: ${{ needs.prepare.outputs.aws_secret_access_key_name }}
       AWS_SESSION_TOKEN: ${{ needs.prepare.outputs.aws_session_token_name }}
