@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   apache:
     image: httpd:latest
@@ -22,6 +20,8 @@ services:
       WORDPRESS_DB_PASSWORD: "{{ db_password }}"
     volumes:
       - ./wordpress:/var/www/html  # Carpeta local con los archivos de WordPress (si es necesario)
+    ports:
+      - "8080:80"
     networks:
       - wordpress_network
     restart: always

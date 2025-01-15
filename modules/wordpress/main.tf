@@ -112,6 +112,12 @@ resource "aws_security_group" "ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # Acceso desde cualquier IP
   }
+  ingress {
+    from_port   = 8080   # Permitir HTTP (NGINX)
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Acceso desde cualquier IP
+  }
 
   # Reglas de salida para permitir todo el tráfico
   egress {
@@ -138,6 +144,12 @@ resource "aws_security_group" "rds_sg" {
     to_port     = 3306
     protocol    = "tcp"
     cidr_blocks = [data.aws_vpc.default.cidr_block]  # Solo permitir la red interna de la VPC
+  }
+  ingress{
+    from_port   = 3306  # Puerto por defecto de MySQL
+    to_port     = 3306
+    protocol    = "tcp"
+    security_groups = [aws_security_group.ec2_sg.id]
   }
 
   tags = {
@@ -174,7 +186,7 @@ resource "aws_instance" "my_instance" {
   subnet_id       = local.subnet_exists ? values(data.aws_subnet.exist_subnet_details)[0].id : aws_subnet.next_subnet.id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true  # Si necesitas acceso público
-  disable_api_termination = true
+  disable_api_termination = false
   
   # Configuración de provisioners
   provisioner "remote-exec" {# este bloque es para que si ejecuto un local-exec sobre este ec2 espere a que la maquina este accesible.

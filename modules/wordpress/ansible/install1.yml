@@ -56,20 +56,6 @@
     - name: Add remote "ubuntu" user to "docker" group
       user:
         name: ubuntu
-        group: docker
+        groups: docker
         append: yes
-
-    - name: Pull default Docker image
-      community.docker.docker_image:
-        name: "{{ default_container_image }}"
-        source: pull
-      become_user: ubuntu 
-
-
-    - name: Create default containers
-      community.docker.docker_container:
-        name: "{{ default_container_name }}{{ item }}"
-        image: "{{ default_container_image }}"
-        command: "{{ default_container_command }}"
-        state: present
-      with_sequence: count={{ container_count }}
+        

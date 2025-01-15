@@ -27,14 +27,17 @@ jobs:
           AWS_ACCESS_KEY_ID_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_ACCESS_KEY_ID')
           AWS_SECRET_ACCESS_KEY_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_SECRET_ACCESS_KEY')
           AWS_SESSION_TOKEN_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_SESSION_TOKEN')
+          AWS_EC2_KEY_NAME_AUX=$(echo $USERNAME | jq -r '.AWS_EC2_KEY')
           
           echo "AWS_ACCESS_KEY_ID_NAME: $AWS_ACCESS_KEY_ID_NAME_AUX"
           echo "AWS_SECRET_ACCESS_KEY_NAME: $AWS_SECRET_ACCESS_KEY_NAME_AUX"
           echo "AWS_SESSION_TOKEN_NAME: $AWS_SESSION_TOKEN_NAME_AUX"
+          echo "AWS_EC2_KEY_NAME: $AWS_EC2_KEY_NAME_AUX"
           
           echo "::set-output name=aws_access_key_id_name::${AWS_ACCESS_KEY_ID_NAME_AUX}"
           echo "::set-output name=aws_secret_access_key_name::${AWS_SECRET_ACCESS_KEY_NAME_AUX}"
           echo "::set-output name=aws_session_token_name::${AWS_SESSION_TOKEN_NAME_AUX}"
+          echo "::set-output name=aws_session_token_name::${AWS_EC2_KEY_NAME_AUX}"
 
           # Guardar los valores como variables de entorno
           #echo "AWS_ACCESS_KEY_ID_NAME=${AWS_ACCESS_KEY_ID_NAME_AUX}" | tee $GITHUB_ENV
@@ -45,6 +48,7 @@ jobs:
       aws_access_key_id_name: ${{ steps.prepare.outputs.AWS_ACCESS_KEY_ID_NAME }}
       aws_secret_access_key_name: ${{ steps.prepare.outputs.AWS_SECRET_ACCESS_KEY_NAME }}
       aws_session_token_name: ${{ steps.prepare.outputs.AWS_SESSION_TOKEN_NAME }}
+      aws_ec2_key_name: ${{ steps.prepare.outputs.AWS_EC2_KEY_NAME }}
 
   deploy:
     needs: prepare
@@ -56,26 +60,19 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ needs.prepare.outputs.aws_access_key_id_name }}
       AWS_SECRET_ACCESS_KEY: ${{ needs.prepare.outputs.aws_secret_access_key_name }}
       AWS_SESSION_TOKEN: ${{ needs.prepare.outputs.aws_session_token_name }}
+      AWS_EC2_KEY: ${{ needs.prepare.outputs.aws_ec2_key_name }}
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-
-    - name: Install Terraform
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+    
+    - name: Install Python 3
       run: |
-        sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-        wget -O- https://apt.releases.hashicorp.com/gpg | \
-        gpg --dearmor | \
-        sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
-        gpg --no-default-keyring \
-        --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
-        --fingerprint
-        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
-        https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
-        sudo tee /etc/apt/sources.list.d/hashicorp.list
         sudo apt update
-        sudo apt-get install terraform
+        sudo apt install -y python3 python3-pip
 
     - name: Terraform Init
       run: |
@@ -83,13 +80,34 @@ jobs:
         export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
         export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
-        cd terraform
         echo "init"
         terraform init
         echo "validate"
         terraform validate
-        echo "plan"
-        terraform plan
         echo "apply"
         terraform apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
+
+      # Paso 2: Instalar Ansible
+    - name: Install Ansible
+      run: |
+          sudo apt update
+          sudo apt install -y software-properties-common
+          sudo add-apt-repository --yes --update ppa:ansible/ansible
+          sudo apt install -y ansible
+
+      # Paso 3: Configurar la clave privada SSH (almacenada como secreto en GitHub)
+    - name: Setup SSH key for Ansible
+      run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets[env.AWS_SESSION_TOKEN] }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # Opcional: Configurar el host conocido para evitar la advertencia de SSH
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+            # Paso 4: Ejecutar los playbooks de Ansible
+
+    - name: Run Ansible Playbooks
+      run: |
+          cd /modules/wordpress/ansible
+          ansible-playbook -i hosts.ini install1.yml
+          ansible-playbook -i hosts.ini php_config.yml
