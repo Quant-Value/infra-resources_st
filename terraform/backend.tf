@@ -1,3 +1,5 @@
+
+/*
 terraform {
   backend "s3" {
     bucket = "proyect-1-stb-devops-bucket"          # Nombre de tu bucket S3
@@ -6,4 +8,4 @@ terraform {
     encrypt = true                                   # Habilita el cifrado en el bucket
     #dynamodb_table = "mi-tabla-dynamodb"             # (Opcional) Usa DynamoDB para el bloqueo del estado (si lo deseas)
   }
-}
+}*/

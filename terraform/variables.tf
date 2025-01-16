@@ -66,5 +66,9 @@ variable "tag_value" {
   description = "El valor del tag para el recurso"
   type        = string
 }
+variable "public_key_path" {
+  description = "Ruta al archivo privado de la clave SSH"
+  type        = string
+}
 
 

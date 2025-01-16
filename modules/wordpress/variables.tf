@@ -25,5 +25,12 @@ variable "tag_value" {
   description = "El valor del tag para el recurso"
   type        = string
 }
-
-
+variable "public_key_path" {
+  description = "Ruta al archivo privado de la clave SSH"
+  type        = string
+}
+variable "aws_region" {
+  description = "La región de AWS donde se desplegarán los recursos"
+  type        = string
+  #default     = "eu-west-3"  # Valor por defecto para la región (París)
+}

@@ -91,6 +91,7 @@ module "ec2_wordpress" {
   ami_id        = var.ami_id       # Pasa la variable ami_id
   private_key_path=var.private_key_path
   tag_value=var.tag_value
+  #backend_bucket_name=var.backend_bucket_name
 
 }
 output "instance_public_ip" {

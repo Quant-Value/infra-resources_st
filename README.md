@@ -29,7 +29,7 @@ ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@15.237.202.141 "ls /tmp"
 
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@
 
-terragrunt run-all init && terragrunt run-all plan && terragrunt run-all apply --terragrunt-non-interactive
+terragrunt run-all init  && terragrunt run-all apply --terragrunt-non-interactive
 
 terragrunt run-all destroy --terragrunt-non-interactive
 

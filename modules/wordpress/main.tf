@@ -1,7 +1,14 @@
 # Crear un Key Pair para EC2
+provider "aws" {
+  region = var.aws_region  # Usamos una variable para la región, que podemos definir en variables.tf
+  #profile = "default"
+  #quitar profile si se compila desde la nube
+}
+
+
 resource "aws_key_pair" "key" {
   key_name   = "my-key-name-${var.tag_value}"
-  public_key = file("../id_rsa.pub")  # Ruta de tu clave pública en tu máquina local
+  public_key = file(var.public_key_path)  # Ruta de tu clave pública en tu máquina local
 }
 
 # Obtener la VPC por defecto
@@ -249,6 +256,7 @@ resource "null_resource" "update_hosts_ini1" {
   
   depends_on = [aws_instance.my_instance]
 }
+
 resource "null_resource" "update_hosts_ini2" {
   provisioner "local-exec" {
 
@@ -316,4 +324,14 @@ resource "null_resource" "update_rdsvars_ini4" {
   
   depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini3]
 }
+/*
+terraform {
+  backend "s3" {
+    bucket = var.backend_bucket_name          # Nombre de tu bucket S3
+    key    = "terragrunt/terraform.tfstate"           # Ruta y nombre del archivo de estado dentro del bucket
+    region = "eu-west-3"                           # Región donde está tu bucket S3
+    encrypt = true                                   # Habilita el cifrado en el bucket
+    #dynamodb_table = "mi-tabla-dynamodb"             # (Opcional) Usa DynamoDB para el bloqueo del estado (si lo deseas)
+  }
+}*/
 

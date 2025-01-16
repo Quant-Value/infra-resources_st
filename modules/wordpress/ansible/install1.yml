@@ -1,11 +1,6 @@
 ---
 - hosts: all
   become: true
-  vars:
-    container_count: 1
-    default_container_name: docker
-    default_container_image: ubuntu
-    default_container_command: sleep 1d
 
   tasks:
     - name: Actualizar todos los paquetes a la última versión
