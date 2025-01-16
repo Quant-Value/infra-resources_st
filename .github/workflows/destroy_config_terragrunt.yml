@@ -1,4 +1,4 @@
-name: D.I.C. with terragrunt
+name: Destroyh terragrunt
 
 on:
   workflow_dispatch:
@@ -103,10 +103,8 @@ jobs:
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         echo "init"
         terragrunt run-all init
-        echo "validate"
-        terragrunt run-all validate
         echo "apply"
-        terragrunt run-all apply --terragrunt-non-interactive
+        terragrunt run-all destroy --terragrunt-non-interactive
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
       env:
           TF_VAR_private_key: ~/.ssh/id_rsa # Pasamos la clave privada como variable de entorno
