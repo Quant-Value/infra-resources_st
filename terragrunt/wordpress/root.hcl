@@ -5,7 +5,11 @@ locals {
 
 
 remote_state {
-    backend ="s3" 
+    backend ="s3"
+    generate={
+        path="backend.tf"
+         if_exists = "overwrite"
+    } 
     config = {
         bucket         =  local.backend_bucket_name   # Nombre del bucket S3
         key            = "terragrunt/${path_relative_to_include()}/file.tfstate"  # Ruta dentro del bucket S3

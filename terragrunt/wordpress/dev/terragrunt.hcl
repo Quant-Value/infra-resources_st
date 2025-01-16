@@ -20,5 +20,6 @@ inputs={
   aws_region= local.common_vars.inputs.aws_region
   #module_path=join("",["../../",local.common_vars.inputs.module_path])
   module_path=""
+  backend_bucket_name = local.common_vars.inputs.backend_bucket_name
 }
   #backend_bucket_name = local.backend_bucket_name

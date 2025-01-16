@@ -94,9 +94,11 @@ module "ec2_wordpress" {
   aws_region = var.aws_region
   public_key_path = var.public_key_path
   module_path=var.module_path
-  #backend_bucket_name=var.backend_bucket_name
 
 }
+
+
+
 output "instance_public_ip" {
   description = "Public IP of the EC2 instance"
   value       = module.ec2_wordpress.ec2_public_ip

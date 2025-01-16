@@ -20,6 +20,20 @@ data "aws_vpc" "default" {
 data "aws_availability_zones" "available" {
   state = "available"
 }
+
+# Paso 2: Listar todas las subredes de la VPC
+data "aws_subnets" "vpc_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+# Paso 3: Guardar la primera subred de la lista en el índice 0
+locals {
+  first_subnet_id = length(data.aws_subnets.vpc_subnets.ids) > 0 ? data.aws_subnets.vpc_subnets.ids[0] : null
+}
+/*
 #----------------------------------------------------   calcular subnet en base a otras existentes en la misma vpc ---------------------------------
 # Obtener las subredes existentes en la VPC por defecto usando un filtro
 data "aws_subnets" "existing_subnets" {
@@ -93,7 +107,7 @@ resource "aws_subnet" "next_subnet" {
   tags = {
     Name = "Subnet-4-${var.tag_value}"
   }
-}
+}*/
 
 /*output "subnet_cidr" {
   value = local.subnet_exists ? data.aws_subnets.exist_subnet.cidr_block: aws_subnet.next_subnet[0].cidr_block
@@ -191,7 +205,8 @@ resource "aws_instance" "my_instance" {
   ami             = var.ami_id  # Reemplaza con una AMI válida para tu región (Ubuntu, RedHat, etc.)
   instance_type   = var.instance_type
   key_name        = aws_key_pair.key.key_name
-  subnet_id       = local.subnet_exists ? values(data.aws_subnet.exist_subnet_details)[0].id : aws_subnet.next_subnet.id
+  #subnet_id       = local.subnet_exists ? values(data.aws_subnet.exist_subnet_details)[0].id : aws_subnet.next_subnet.id
+  subnet_id = local.first_subnet_id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true  # Si necesitas acceso público
   disable_api_termination = false
@@ -215,8 +230,7 @@ resource "aws_instance" "my_instance" {
   tags = {
     Name = "Wordpress-${var.tag_value}"
   }
-  depends_on = [
-    aws_subnet.next_subnet,        # Esperar a que la subred se cree
+  depends_on = [        # Esperar a que la subred se cree
     aws_security_group.ec2_sg      # Esperar a que el Security Group EC2 se cree
   ]
 }
@@ -235,6 +249,7 @@ resource "aws_db_instance" "mysql_db" {
   publicly_accessible = true
   multi_az          = false
   storage_type      = "gp2"
+  #b_subnet_group
 
   tags = {
     Name = "MySQLDatabase-${var.tag_value}"
@@ -353,8 +368,8 @@ resource "null_resource" "provisioner2" {
 terraform {
   backend "s3" {
     bucket = var.backend_bucket_name          # Nombre de tu bucket S3
-    key    = "terragrunt/terraform.tfstate"           # Ruta y nombre del archivo de estado dentro del bucket
-    region = "eu-west-3"                           # Región donde está tu bucket S3
+    key    = "state/${var.tag_value}/terraform.tfstate"           # Ruta y nombre del archivo de estado dentro del bucket
+    region = var.aws_region                          # Región donde está tu bucket S3
     encrypt = true                                   # Habilita el cifrado en el bucket
     #dynamodb_table = "mi-tabla-dynamodb"             # (Opcional) Usa DynamoDB para el bloqueo del estado (si lo deseas)
   }

@@ -37,3 +37,8 @@ variable "aws_region" {
 variable "module_path" {
   type        = string
 }
+/*
+variable "backend_bucket_name" {
+  description = "Nombre del bucket S3"
+  type        = string
+}*/
