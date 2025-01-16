@@ -34,3 +34,6 @@ variable "aws_region" {
   type        = string
   #default     = "eu-west-3"  # Valor por defecto para la región (París)
 }
+variable "module_path" {
+  type        = string
+}

@@ -16,3 +16,4 @@ private_key_path = "~/.ssh/id_rsa" # Ruta al archivo .pem de la clave privada
 backend_bucket_name= "proyect-1-stb-devops-bucket"
 tag_value="stb"
 public_key_path="~/.ssh/id_rsa.pub"
+module_path="../modules/wordpress/"

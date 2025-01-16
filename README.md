@@ -40,7 +40,7 @@ ansible-playbook -i hosts.ini install.yml
 
 terraform apply -replace="module.ec2_wordpress.aws_instance.my_instance" -auto-approve
 
-ansible-galaxy install geerlingguy.docker
+/mnt/e/Campusdual/repo-personal-campus/infra-resources/terragrunt/wordpress/dev/.terragrunt-cache/tY2qJ7fWPxhHukQJvPgjK6wlHfI/G3NyCIgTl40a0GFpP2qOnR7j2Ug
 
 
 

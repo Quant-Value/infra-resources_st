@@ -102,7 +102,7 @@ resource "aws_subnet" "next_subnet" {
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Crear un Security Group para EC2
 resource "aws_security_group" "ec2_sg" {
-  name        = "stb-ec2-sg"
+  name        = "${var.tag_value}-ec2-sg"
   description = "Security group for EC2 instance"
   vpc_id      = data.aws_vpc.default.id
 
@@ -142,7 +142,7 @@ resource "aws_security_group" "ec2_sg" {
 
 # Crear un Security Group para MySQL (RDS)
 resource "aws_security_group" "rds_sg" {
-  name        = "stb-rds-sg"
+  name        = "${var.tag_value}-rds-sg"
   description = "Security group for MySQL RDS"
   vpc_id      = data.aws_vpc.default.id
 
@@ -246,8 +246,9 @@ resource "aws_db_instance" "mysql_db" {
 
 resource "null_resource" "update_hosts_ini1" {
   provisioner "local-exec" {
+    #command = "pwd"
 
-    command = "echo [webservers] > ../modules/wordpress/ansible/hosts.ini"
+    command = "echo [webservers] > ${var.module_path}ansible/hosts.ini"
      }
   # Usar triggers para forzar la ejecución del recurso
   triggers = {
@@ -260,7 +261,7 @@ resource "null_resource" "update_hosts_ini1" {
 resource "null_resource" "update_hosts_ini2" {
   provisioner "local-exec" {
 
-    command = "echo ${aws_instance.my_instance.public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ../modules/wordpress/ansible/hosts.ini"
+    command = "echo ${aws_instance.my_instance.public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ${var.module_path}ansible/hosts.ini"
 
   }
   # Usar triggers para forzar la ejecución del recurso
@@ -275,7 +276,7 @@ resource "null_resource" "update_hosts_ini2" {
 resource "null_resource" "update_rdsvars_ini1" {
   provisioner "local-exec" {
 
-    command = "echo rds_username: ${aws_db_instance.mysql_db.username}   > ../modules/wordpress/ansible/vars.yml"
+    command = "echo rds_username: ${aws_db_instance.mysql_db.username}   > ${var.module_path}ansible/vars.yml"
 
   }
   # Usar triggers para forzar la ejecución del recurso
@@ -287,7 +288,7 @@ resource "null_resource" "update_rdsvars_ini1" {
 resource "null_resource" "update_rdsvars_ini2" {
   provisioner "local-exec" {
 
-    command = "echo rds_password: ${aws_db_instance.mysql_db.password}   >> ../modules/wordpress/ansible/vars.yml"
+    command = "echo rds_password: ${aws_db_instance.mysql_db.password}   >> ${var.module_path}ansible/vars.yml"
 
   }
   # Usar triggers para forzar la ejecución del recurso
@@ -301,7 +302,7 @@ resource "null_resource" "update_rdsvars_ini2" {
 resource "null_resource" "update_rdsvars_ini3" {
   provisioner "local-exec" {
 
-    command = "echo rds_endpoint: ${aws_db_instance.mysql_db.endpoint}   >> ../modules/wordpress/ansible/vars.yml"
+    command = "echo rds_endpoint: ${aws_db_instance.mysql_db.endpoint}   >> ${var.module_path}ansible/vars.yml"
 
   }
   # Usar triggers para forzar la ejecución del recurso
@@ -315,7 +316,7 @@ resource "null_resource" "update_rdsvars_ini3" {
 resource "null_resource" "update_rdsvars_ini4" {
   provisioner "local-exec" {
 
-    command = "echo rds_db_name: ${aws_db_instance.mysql_db.db_name}   >> ../modules/wordpress/ansible/vars.yml"
+    command = "echo rds_db_name: ${aws_db_instance.mysql_db.db_name}   >> ${var.module_path}ansible/vars.yml"
   }
   # Usar triggers para forzar la ejecución del recurso
   triggers = {
@@ -323,6 +324,30 @@ resource "null_resource" "update_rdsvars_ini4" {
   }
   
   depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini3]
+}
+resource "null_resource" "provisioner1" {
+  provisioner "local-exec" {
+
+    command = "export ANSIBLE_CONFIG=${var.module_path}ansible/ansible.cfg && ansible-playbook -i ${var.module_path}ansible/hosts.ini ${var.module_path}ansible/install1.yml"
+  }
+  # Usar triggers para forzar la ejecución del recurso
+  triggers = {
+    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
+  }
+  
+  depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini4,null_resource.update_hosts_ini2]
+}
+resource "null_resource" "provisioner2" {
+  provisioner "local-exec" {
+
+    command = "export ANSIBLE_CONFIG=${var.module_path}ansible/ansible.cfg && ansible-playbook -i ${var.module_path}ansible/hosts.ini ${var.module_path}ansible/php_config.yml"
+  }
+  # Usar triggers para forzar la ejecución del recurso
+  triggers = {
+    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
+  }
+  
+  depends_on = [null_resource.provisioner1]
 }
 /*
 terraform {

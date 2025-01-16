@@ -91,6 +91,9 @@ module "ec2_wordpress" {
   ami_id        = var.ami_id       # Pasa la variable ami_id
   private_key_path=var.private_key_path
   tag_value=var.tag_value
+  aws_region = var.aws_region
+  public_key_path = var.public_key_path
+  module_path=var.module_path
   #backend_bucket_name=var.backend_bucket_name
 
 }

@@ -56,7 +56,7 @@ jobs:
 
     # Define una variable de entorno para el directorio de trabajo
     env:
-      TF_WORKING_DIR: terraform # Aquí defines tu directorio
+      TF_WORKING_DIR: terragrunt/wordpress # Aquí defines tu directorio
       TF_WORKING_DIR2: modules/wordpress/ansible # Aquí defines tu directorio
       AWS_ACCESS_KEY_ID: ${{ needs.prepare.outputs.aws_access_key_id_name }}
       AWS_SECRET_ACCESS_KEY: ${{ needs.prepare.outputs.aws_secret_access_key_name }}
@@ -67,20 +67,21 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
+    - name: Install Terragrunt
+      run: |
+        sudo curl -Lo /usr/local/bin/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v0.46.0/terragrunt_linux_amd64
+        sudo chmod +x /usr/local/bin/terragrunt
     
     - name: Install Python 3
       run: |
         sudo apt update
         sudo apt install -y python3 python3-pip
-
     - name: Install Ansible
       run: |
-          sudo apt update
-          sudo apt install -y software-properties-common
-          sudo add-apt-repository --yes --update ppa:ansible/ansible
-          sudo apt install -y ansible
+            sudo apt update
+            sudo apt install -y software-properties-common
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install -y ansible
     
     - name: Set up SSH private key
       run: |
@@ -89,20 +90,23 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
 
 
-    - name: Terraform Init
+    - name: Terragrunt Init
       run: |
         set -e # Detener la ejecución del script si algún comando falla
         export AWS_ACCESS_KEY_ID=${{ secrets[env.AWS_ACCESS_KEY_ID] }}
         export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         echo "init"
-        terraform init
+        terragrunt run-all init
         echo "validate"
-        terraform validate
+        terragrunt run-all validate
         echo "apply"
-        terraform apply -auto-approve
+        terragrunt run-all apply -auto-approve
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
       env:
           TF_VAR_private_key: ~/.ssh/id_rsa # Pasamos la clave privada como variable de entorno
 
- 
+      # Paso 2: Instalar Ansible
+    
+
+

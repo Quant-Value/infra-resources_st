@@ -70,5 +70,7 @@ variable "public_key_path" {
   description = "Ruta al archivo privado de la clave SSH"
   type        = string
 }
-
+variable "module_path" {
+  type        = string
+}
 
