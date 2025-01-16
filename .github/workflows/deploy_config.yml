@@ -1,4 +1,4 @@
-name: Deploy Infrastructure and configuration with terraform
+name: D.I.C. with terraform
 
 on:
   workflow_dispatch:

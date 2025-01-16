@@ -1,4 +1,4 @@
-name: Deploy Infrastructure and configuration with terragrunt
+name: D.I.C. with terragrunt
 
 on:
   workflow_dispatch:
