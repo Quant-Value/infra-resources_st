@@ -122,15 +122,15 @@ resource "aws_instance" "my_instance" {
       private_key = file(var.private_key_path)  # Ruta a tu clave privada en tu máquina local
       host        = self.public_ip  # La IP pública de la instancia
     }
-
+  }
+  provisioner "local-exec"{
+    command = "echo ${aws_instance.my_instance[count.index].public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ${var.module_path}ansible/hosts.ini"
   } 
 
   tags = {
     Name = "Wordpress-${var.tag_value}"
   }
-  depends_on = [        # Esperar a que la subred se cree
-    aws_security_group.ec2_sg      # Esperar a que el Security Group EC2 se cree
-  ]
+  depends_on = [aws_security_group.ec2_sg, null_resource.update_hosts_ini1]
 }
 
 # Crear un Load Balancer
@@ -206,14 +206,14 @@ resource "null_resource" "update_hosts_ini1" {
   provisioner "local-exec" {
     #command = "pwd"
 
-    command = "echo [webservers] > ${var.module_path}ansible/hosts.ini && echo ${aws_instance.my_instance.public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ${var.module_path}ansible/hosts.ini"
+    command = "echo [webservers] > ${var.module_path}ansible/hosts.ini "
      }
   # Usar triggers para forzar la ejecución del recurso
   triggers = {
     always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
   }
   
-  depends_on = [aws_instance.my_instance]
+  #depends_on = [aws_instance.my_instance]
 }
 /*
 resource "null_resource" "update_hosts_ini2" {
