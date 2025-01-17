@@ -99,7 +99,10 @@ resource "aws_security_group" "rds_sg" {
     Name = "rds-sg-${var.tag_value}"
   }
 }
-
+resource "random_integer" "example" {
+  min = 1
+  max = 100
+}
 
 # Crear una instancia EC2 con un bloque de provisionamiento SSH
 resource "aws_instance" "my_instance" {
@@ -108,7 +111,7 @@ resource "aws_instance" "my_instance" {
   instance_type   = var.instance_type
   key_name        = aws_key_pair.key.key_name
   #subnet_id       = local.subnet_exists ? values(data.aws_subnet.exist_subnet_details)[0].id : aws_subnet.next_subnet.id
-  subnet_id = data.aws_subnets.vpc_subnets.ids[count.index % length(data.aws_subnets.vpc_subnets.ids)]
+  subnet_id = data.aws_subnets.vpc_subnets.ids[(count.index+random_integer.example) % length(data.aws_subnets.vpc_subnets.ids)]
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true  # Si necesitas acceso público
   disable_api_termination = false
