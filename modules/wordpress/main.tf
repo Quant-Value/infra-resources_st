@@ -188,7 +188,7 @@ resource "aws_db_instance" "mysql_db" {
   password          = "mypassword123"  # Asegúrate de usar contraseñas seguras
   skip_final_snapshot = true
   publicly_accessible = true
-  multi_az          = true
+  multi_az          = var.replicas>1?true:false
   storage_type      = "gp2"
   #b_subnet_group
 
