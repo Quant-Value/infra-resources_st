@@ -7,5 +7,6 @@ inputs = {
     public_key_path = "~/.ssh/id_rsa.pub" 
     module_path="../../../modules/wordpress"
     backend_bucket_name= "proyect-1-stb-devops-bucket"
+    replicas = 1
 }
     #backend_bucket_name= "proyect-1-stb-devops-bucket"

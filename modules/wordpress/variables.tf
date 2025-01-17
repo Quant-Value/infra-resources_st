@@ -37,6 +37,11 @@ variable "aws_region" {
 variable "module_path" {
   type        = string
 }
+variable "replicas" {
+  description = "Indica la cantidad de replicas de rds"
+  type        = number
+  default     = 1  # Valor por defecto, si no se pasa valor, no se crea la réplica
+}
 /*
 variable "backend_bucket_name" {
   description = "Nombre del bucket S3"

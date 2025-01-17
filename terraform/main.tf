@@ -112,9 +112,3 @@ output "rds_password"{
   value = module.ec2_wordpress.rds_password
   sensitive=true
 }
-/*
-output "rds_endpoint"{
-  
-  value = module.ec2_wordpress.rds_endpoint
-
-}*/

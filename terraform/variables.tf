@@ -44,7 +44,7 @@ variable "create_replica" {
   type        = bool
   default     = false  # Valor por defecto, si no se pasa valor, no se crea la réplica
 }
-variable "rds_replicas" {
+variable "replicas" {
   description = "Indica la cantidad de replicas de rds"
   type        = number
   default     = 1  # Valor por defecto, si no se pasa valor, no se crea la réplica
