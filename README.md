@@ -95,11 +95,13 @@ Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu 
 >Configura los pasos 2 y 4 para que no existan problemas a la hora de desplegar infraestructura.
 
 
->[!NOTE]
->¿Porque hay que hacer todo esto?
+[!NOTE]
 
->En este bootcamp no nos dan otras herramientas para gestionar nuestras claves privadas y he diseñado el flujo de github actions para que si hacemos todos como grupo push a un mismo >repositorio use la clave de quien ha hecho el push y no la de otro compañero (en caso de que usaramos claves de acceso diferentes). NOTA: Igualmente en el contexto del bootcamp >todos compartimos las claves de acceso a aws asique como que es un poco indiferente haber hecho este flujo de trabajo
+¿Por qué seguimos este flujo?
 
+En el contexto de este bootcamp, no se nos proporcionan herramientas adicionales para gestionar las claves privadas de manera individual. Por ello, he diseñado el flujo de trabajo en GitHub Actions de tal forma que, si todos hacemos push al mismo repositorio, se utilice la clave privada de quien realizó el push, en lugar de usar la clave de otro compañero. Esto es especialmente útil en escenarios donde, de ser necesario, cada uno podría tener claves de acceso diferentes.
+
+NOTA: En este bootcamp, todos compartimos las mismas claves de acceso a AWS, por lo que, en última instancia, la distinción no afecta demasiado al flujo de trabajo. A pesar de esto, mantener la clave asociada a cada push es una práctica que podemos aplicar para asegurar la flexibilidad en escenarios más complejos.
 
 
 
