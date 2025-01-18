@@ -20,13 +20,12 @@ Antes de ejecutar los scripts, personaliza la configuración de tu infraestructu
 
 #### 2.1. Configuración de módulos Terraform:
 
-    Modifica este archivo para configurar un backend diferente para Terraform.
-        ->  terraform/backend.tf
-    Personaliza las variables según tu entorno y requisitos específicos.
-        ->  terraform/custom-vars.tfvars
+    Modifica este archivo para configurar un backend diferente para Terraform ->  terraform/backend.tf
+
+    Personaliza las variables según tu entorno y requisitos específicos ->  terraform/custom-vars.tfvars
+    
     Asegúrate de modificar la clave pública para evitar sobrescribir las claves 
-    de otros usuarios o infraestructuras.
-        ->  id_rsa.pub
+    de otros usuarios o infraestructuras ->  id_rsa.pub
 
 #### 2.2. Configuración de módulos Terragrunt:
 
