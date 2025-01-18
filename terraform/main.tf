@@ -94,6 +94,8 @@ module "ec2_wordpress" {
   aws_region = var.aws_region
   public_key_path = var.public_key_path
   module_path=var.module_path
+  db_username=var.db_username
+  db_password=var.db_password
 
 }
 

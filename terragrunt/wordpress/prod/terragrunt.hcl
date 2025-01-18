@@ -8,7 +8,7 @@ include {
 }
 terraform {
     #source="./"
-    source=local.common_vars.inputs.module_path
+    source=local.common_vars.inputs.module_path_to_import
 }
 #inputs = #merge(local.common_vars.inputs)
 inputs={
@@ -19,8 +19,10 @@ inputs={
   public_key_path=local.common_vars.inputs.public_key_path
   aws_region= local.common_vars.inputs.aws_region
   #module_path=join("",["../../",local.common_vars.inputs.module_path])
-  module_path=""
-  backend_bucket_name = local.common_vars.inputs.backend_bucket_name
+  module_path=local.common_vars.inputs.module_path
+  #backend_bucket_name = local.common_vars.inputs.backend_bucket_name
   replicas=local.common_vars.inputs.replicas
+  db_username=local.common_vars.inputs.db_username
+  db_password=local.common_vars.inputs.db_password
 }
   #backend_bucket_name = local.backend_bucket_name

@@ -1,3 +1,3 @@
-cd terragrunt
-terragrunt destroy -auto-approve
+cd terragrunt/wordpress
+terragrunt run-all destroy -auto-approve
 

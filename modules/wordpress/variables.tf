@@ -42,8 +42,14 @@ variable "replicas" {
   type        = number
   default     = 1  # Valor por defecto, si no se pasa valor, no se crea la réplica
 }
-/*
-variable "backend_bucket_name" {
-  description = "Nombre del bucket S3"
-  type        = string
-}*/
+variable "db_username" {
+  type = string
+  default = ""
+  sensitive= true  # Esto marca la variable como sensible
+}
+
+variable "db_password" {
+  type = string
+  default = ""
+  sensitive = true  # Esto marca la variable como sensible
+}

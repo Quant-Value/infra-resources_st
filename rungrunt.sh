@@ -1,5 +1,5 @@
-cd terragrunt
-terragrunt init 
-terragrunt plan
-terragrunt apply -auto-approve
+cd terragrunt/wordpress
+terragrunt run-all init 
+terragrunt run-all plan
+terragrunt run-all apply -auto-approve
 

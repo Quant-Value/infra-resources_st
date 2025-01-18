@@ -137,7 +137,7 @@ resource "aws_instance" "my_instance" {
   tags = {
     Name = "Wordpress-${var.tag_value}-${count.index}"
   }
-  depends_on = [aws_security_group.ec2_sg, null_resource.update_hosts_ini1]
+  depends_on = [aws_security_group.ec2_sg, null_resource.update_hosts_ini1,aws_db_instance.mysql_db]
 }
 
 
@@ -194,8 +194,8 @@ resource "aws_db_instance" "mysql_db" {
   instance_class    = "db.t3.micro"  # Clase de instancia para MySQL
   allocated_storage = 10  # Almacenamiento en GB
   db_name           = "mydatabase${var.tag_value}"
-  username          = "admin"
-  password          = "mypassword123"  # Asegúrate de usar contraseñas seguras
+  username          = var.db_username
+  password          = var.db_password  # Asegúrate de usar contraseñas seguras
   skip_final_snapshot = true
   publicly_accessible = true
   multi_az          = var.replicas>1?true:false
