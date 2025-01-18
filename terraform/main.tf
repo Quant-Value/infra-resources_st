@@ -86,7 +86,6 @@ module "lambda" {
 
 module "ec2_wordpress" {
   source       = "../modules/wordpress"
-  #aws_region   = var.aws_region   # Pasa la variable aws_region
   instance_type = var.instance_type # Pasa la variable instance_type
   ami_id        = var.ami_id       # Pasa la variable ami_id
   private_key_path=var.private_key_path
@@ -96,6 +95,7 @@ module "ec2_wordpress" {
   module_path=var.module_path
   db_username=var.db_username
   db_password=var.db_password
+  replicas=var.replicas
 
 }
 

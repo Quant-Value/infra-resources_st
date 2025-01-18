@@ -5,7 +5,6 @@ provider "aws" {
   #quitar profile si se compila desde la nube
 }
 
-
 resource "aws_key_pair" "key" {
   key_name   = "my-key-name-${var.tag_value}"
   public_key = file(var.public_key_path)  # Ruta de tu clave pública en tu máquina local
@@ -15,11 +14,7 @@ resource "aws_key_pair" "key" {
 data "aws_vpc" "default" {
   default = true
 }
-/*
-# Obtener las zonas de disponibilidad disponibles
-data "aws_availability_zones" "available" {
-  state = "available"
-}*/
+
 
 # Paso 2: Listar todas las subredes de la VPC
 data "aws_subnets" "vpc_subnets" {
@@ -81,13 +76,6 @@ resource "aws_security_group" "rds_sg" {
   description = "Security group for MySQL RDS"
   vpc_id      = data.aws_vpc.default.id
 
-  # Reglas de entrada para MySQL (RDS)
-  ingress {
-    from_port   = 3306  # Puerto por defecto de MySQL
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.default.cidr_block]  # Solo permitir la red interna de la VPC
-  }
   ingress{
     from_port   = 3306  # Puerto por defecto de MySQL
     to_port     = 3306
@@ -99,14 +87,11 @@ resource "aws_security_group" "rds_sg" {
     Name = "rds-sg-${var.tag_value}"
   }
 }
+
 resource "random_integer" "example" {
   min = 1
   max = 100
 }
-/*
-output "random_number" {
-  value = random_integer.example.result
-}*/
 
 # Crear una instancia EC2 con un bloque de provisionamiento SSH
 resource "aws_instance" "my_instance" {
@@ -130,6 +115,7 @@ resource "aws_instance" "my_instance" {
       host        = self.public_ip  # La IP pública de la instancia
     }
   }
+  
   provisioner "local-exec"{
     command = "echo ${aws_instance.my_instance[count.index].public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ${var.module_path}ansible/hosts.ini"
   } 
@@ -137,10 +123,8 @@ resource "aws_instance" "my_instance" {
   tags = {
     Name = "Wordpress-${var.tag_value}-${count.index}"
   }
-  depends_on = [aws_security_group.ec2_sg, null_resource.update_hosts_ini1,aws_db_instance.mysql_db]
+  depends_on = [aws_security_group.ec2_sg, null_resource.update_hosts_ini1,null_resource.update_rdsvars_ini1]
 }
-
-
 
 # Crear un Target Group para el Load Balancer
 resource "aws_lb_target_group" "my_target_group" {
@@ -210,36 +194,16 @@ resource "aws_db_instance" "mysql_db" {
   ]
 }
 
-
-
 resource "null_resource" "update_hosts_ini1" {
   provisioner "local-exec" {
     #command = "pwd"
-
     command = "echo [webservers] > ${var.module_path}ansible/hosts.ini "
      }
   # Usar triggers para forzar la ejecución del recurso
   triggers = {
     always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
   }
-  
-  #depends_on = [aws_instance.my_instance]
 }
-/*
-resource "null_resource" "update_hosts_ini2" {
-  provisioner "local-exec" {
-
-    command = ""
-
-  }
-  # Usar triggers para forzar la ejecución del recurso
-  triggers = {
-    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
-  }
-  
-  depends_on = [aws_instance.my_instance,null_resource.update_hosts_ini1]
-}*/
-
 
 resource "null_resource" "update_rdsvars_ini1" {
   provisioner "local-exec" {
@@ -254,47 +218,7 @@ resource "null_resource" "update_rdsvars_ini1" {
   depends_on=[aws_db_instance.mysql_db]
   
 }
-/*
-resource "null_resource" "update_rdsvars_ini2" {
-  provisioner "local-exec" {
 
-    command = ""
-
-  }
-  # Usar triggers para forzar la ejecución del recurso
-  triggers = {
-    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
-  }
-  
-  depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini1]
-}
-
-resource "null_resource" "update_rdsvars_ini3" {
-  provisioner "local-exec" {
-
-    command = ""
-
-  }
-  # Usar triggers para forzar la ejecución del recurso
-  triggers = {
-    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
-  }
-  
-  depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini2]
-}
-
-resource "null_resource" "update_rdsvars_ini4" {
-  provisioner "local-exec" {
-
-    command = ""
-  }
-  # Usar triggers para forzar la ejecución del recurso
-  triggers = {
-    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
-  }
-  
-  depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini3]
-}*/
 resource "null_resource" "provisioner1" {
   provisioner "local-exec" {
 
@@ -305,8 +229,9 @@ resource "null_resource" "provisioner1" {
     always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
   }
   
-  depends_on = [aws_instance.my_instance,null_resource.update_rdsvars_ini1,null_resource.update_hosts_ini1]
+  depends_on = [aws_instance.my_instance]
 }
+
 resource "null_resource" "provisioner2" {
   provisioner "local-exec" {
 

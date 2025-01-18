@@ -30,13 +30,11 @@ variable "acl" {
 
 variable "db_username" {
   type = string
-  default = ""
   sensitive= true  # Esto marca la variable como sensible
 }
 
 variable "db_password" {
   type = string
-  default = ""
   sensitive = true  # Esto marca la variable como sensible
 }
 variable "create_replica" {
@@ -47,12 +45,10 @@ variable "create_replica" {
 variable "replicas" {
   description = "Indica la cantidad de replicas de rds"
   type        = number
-  default     = 1  # Valor por defecto, si no se pasa valor, no se crea la réplica
 }
 variable "vpc_cidr" {
   description = "Rango de direcciones CIDR para la VPC"
   type        = string
-  default     = "10.0.0.0/16"
 }
 variable "private_key_path" {
   description = "Ruta al archivo privado de la clave SSH"

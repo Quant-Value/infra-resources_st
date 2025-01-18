@@ -1,11 +1,4 @@
 # Declaración de variables
-/*
-variable "aws_region" {
-  description = "La región de AWS donde se desplegarán los recursos"
-  type        = string
-  #default     = "eu-west-3"  # Valor por defecto para la región (París)
-}*/
-
 variable "ami_id" {
   description = "ID de la AMI de Red Hat en la región especificada"
   type        = string
@@ -40,16 +33,13 @@ variable "module_path" {
 variable "replicas" {
   description = "Indica la cantidad de replicas de rds"
   type        = number
-  default     = 1  # Valor por defecto, si no se pasa valor, no se crea la réplica
 }
 variable "db_username" {
   type = string
-  default = ""
   sensitive= true  # Esto marca la variable como sensible
 }
 
 variable "db_password" {
   type = string
-  default = ""
   sensitive = true  # Esto marca la variable como sensible
 }
