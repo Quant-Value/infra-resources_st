@@ -34,16 +34,16 @@ Antes de ejecutar los scripts, personaliza la configuración de tu infraestructu
 ### 2.1. Configuración de Módulos Terraform:
 
     Configurar el Backend de Terraform:
-        Modifica el archivo *terraform/backend.tf* para ajustar la configuración del backend que deseas utilizar para tu infraestructura.
+        Modifica el archivo _terraform/backend.tf_ para ajustar la configuración del backend que deseas utilizar para tu infraestructura.
     Personalización de Variables:
-        Personaliza las variables en el archivo *terraform/custom-vars.tfvars* según tu entorno y requisitos específicos.
+        Personaliza las variables en el archivo _terraform/custom-vars.tfvars_ según tu entorno y requisitos específicos.
     Modificar la Clave Pública:
-        Asegúrate de actualizar la clave pública en el archivo *id_rsa.pub* para evitar sobrescribir las claves de otros usuarios o infraestructuras.
+        Asegúrate de actualizar la clave pública en el archivo _id_rsa.pub_ para evitar sobrescribir las claves de otros usuarios o infraestructuras.
 
 ### 2.2. Configuración de Módulos Terragrunt:
 
     Personalización por Módulo de Terragrunt:
-        Personaliza el archivo *terragrunt/[modulo]/all-common.hcl* para definir la configuración específica de tu entorno para cada módulo de Terragrunt.
+        Personaliza el archivo _terragrunt/[modulo]/all-common.hcl_ para definir la configuración específica de tu entorno para cada módulo de Terragrunt.
 
 ### 3. Uso de scripts automatizados
 
