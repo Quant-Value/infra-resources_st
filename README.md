@@ -19,7 +19,7 @@ Importante ( [ ] -> denota opcionalidad )
 Antes de ejecutar los scripts, personaliza la configuración de tu infraestructura según tus necesidades. Para ello, modifica los siguientes archivos.
 
 >[!IMPORTANT]
->Los cambios que estas por realizar solo funcionaran en un repositorio donde subas cambios tu solo. De lo contrario le podrias cambiar las iniciales a un compañero en su infraestructura.
+>Los cambios que estas por realizar solo funcionaran en un repositorio donde subas cambios tu solo. De lo contrario le podrias cambiar las iniciales a un compañero en su infraestructura cuando haga pull del repositorio.
 
 >[!IMPORTANT]
 >Cuando hagamos el proyecto entre los 5 deberiamos usar unas iniciales en común para los 5 y una misma clave publica y privada que deberiamos compartir por algun sitio seguro.
