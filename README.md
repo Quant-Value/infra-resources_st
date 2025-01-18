@@ -39,12 +39,59 @@ Scripts para ejecutar y eliminar recursos:
     rungrunt.sh: Este script ejecuta los recursos definidos desde terragrunt.
     rundelgrunt.sh: Este script elimina los recursos definidos desde terragrunt.
 
+### 4. Uso de Github Actions
+Primero debeis configurar el fichero en docs/users.json 
+este es un ejemplo -> 
+"Myusuariodegithub": {
+      "AWS_ACCESS_KEY_ID": "AWS_ACCESS_KEY_ID_Tunombre",
+      "AWS_SECRET_ACCESS_KEY": "AWS_SECRET_ACCESS_KEY_Tunombre",
+      "AWS_SESSION_TOKEN": "AWS_SESSION_TOKEN_Tunombre",
+      "AWS_EC2_KEY": "AWS_EC2_KEY_Tunombre"
+    }
+
+   Añade este bloque a continuacion y configura las variables Myusuariodegithub y Tunombre.
+
+   Una vez tengas bien el json prodece a subir el codigo a un repositorio. Ahora debes configurar en el repositorio en la pestaña de settings -> security -> secrets and variables -> actions y creais 4 repository secrets con los nombres que habeis configurado en el json. Por ejemplo AWS_ACCESS_KEY_ID_Tunombre como nombre y el contenido sera tu AWS_ACCESS_KEY_ID de aws. NOTA esta secreto debe contener el contenido de tu clave privada asociada a la clave publica con la que creas las instancias ec2 -> AWS_EC2_KEY_Tunombre. Cuando esten configurados los secretos vete a la pestaña de "Actions" y ahi apareceran las acciones para ejecutar de forma manual, selecciona la que prefieras y el flujo deberia funcionar.
+
+### 4. Uso de Github Actions
+
+Para comenzar con **Github Actions**, primero necesitas configurar el archivo `docs/users.json`. A continuación, te mostramos un ejemplo del formato correcto:
+
+```json
+"Myusuariodegithub": {
+  "AWS_ACCESS_KEY_ID": "AWS_ACCESS_KEY_ID_Tunombre",
+  "AWS_SECRET_ACCESS_KEY": "AWS_SECRET_ACCESS_KEY_Tunombre",
+  "AWS_SESSION_TOKEN": "AWS_SESSION_TOKEN_Tunombre",
+  "AWS_EC2_KEY": "AWS_EC2_KEY_Tunombre"
+}
+```
+
+Pasos a seguir:
+
+    Configura tu archivo users.json:
+        Añade el bloque anterior a tu archivo docs/users.json.
+        Reemplaza Myusuariodegithub con tu nombre de usuario de GitHub.
+        Sustituye Tunombre con el nombre que prefieras o el nombre de tu entorno, asegurándote de que las variables coinciden con los valores correspondientes en AWS.
+
+    Sube el archivo a tu repositorio: Una vez configurado correctamente el archivo users.json, realiza el commit y push de los cambios a tu repositorio en GitHub.
+
+    Configura los secretos en tu repositorio:
+        Dirígete a la pestaña de Settings en tu repositorio.
+        En el menú lateral, selecciona Security y luego Secrets and variables.
+        Haz clic en Actions para agregar los secretos necesarios.
+
+    Agrega los siguientes secretos:
+        AWS_ACCESS_KEY_ID_Tunombre: El valor debe ser tu AWS_ACCESS_KEY_ID de AWS.
+        AWS_SECRET_ACCESS_KEY_Tunombre: El valor debe ser tu AWS_SECRET_ACCESS_KEY de AWS.
+        AWS_SESSION_TOKEN_Tunombre: El valor debe ser tu AWS_SESSION_TOKEN de AWS.
+        AWS_EC2_KEY_Tunombre: El valor debe ser el contenido de tu clave privada asociada a la clave pública con la que creas las instancias EC2.
+
+    Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu clave privada de EC2, ya que será necesario para crear y gestionar instancias EC2 desde GitHub Actions.
 
 
 
 
-
-### 4. Commandos para recordar
+### 5. Commandos para recordar
 
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@
 
