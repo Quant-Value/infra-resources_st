@@ -23,12 +23,7 @@ data "aws_subnets" "vpc_subnets" {
     values = [data.aws_vpc.default.id]
   }
 }
-/*
-# Paso 3: Guardar la primera subred de la lista en el índice 0
-locals {
-  first_subnet_id = length(data.aws_subnets.vpc_subnets.ids) > 0 ? data.aws_subnets.vpc_subnets.ids[0] : null
-}
-*/
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Crear un Security Group para EC2
 resource "aws_security_group" "ec2_sg" {
@@ -115,10 +110,6 @@ resource "aws_instance" "my_instance" {
       host        = self.public_ip  # La IP pública de la instancia
     }
   }
-  /*
-  provisioner "local-exec"{
-    command = "echo ${aws_instance.my_instance[count.index].public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ${var.module_path}ansible/hosts.ini"
-  } */
 
   tags = {
     Name = "Wordpress-${var.tag_value}-${count.index}"
