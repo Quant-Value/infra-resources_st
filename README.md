@@ -19,7 +19,10 @@ Importante ( [ ] -> denota opcionalidad )
 Antes de ejecutar los scripts, personaliza la configuración de tu infraestructura según tus necesidades. Para ello, modifica los siguientes archivos.
 
 >[!IMPORTANT]
->Los cambios que estas por realizar solo funcionaran en un repositorio donde subas cambios tu solo.
+>Los cambios que estas por realizar solo funcionaran en un repositorio donde subas cambios tu solo. De lo contrario le podrias cambiar las iniciales a un compañero en su infraestructura.
+
+>[!IMPORTANT]
+>Cuando hagamos el proyecto entre los 5 deberiamos unar unas iniciales en comun para los 5 y una misma clave publica y privada que deberiamos compartir por algun sitio seguro.
 
 ### 2.1. Configuración de Módulos Terraform:
 
