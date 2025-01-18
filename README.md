@@ -60,7 +60,8 @@ Pasos a seguir:
         Sustituye Tunombre con el nombre que prefieras.
 
     Sube el archivo a tu repositorio: 
-         Una vez configurado correctamente el archivo users.json, realiza el commit y push de los cambios a tu repositorio en GitHub.
+         Una vez configurado correctamente el archivo users.json, realiza el commit y push de los 
+         cambios a tu repositorio en GitHub.
 
     Configura los secretos en tu repositorio:
         Dirígete a la pestaña de Settings en tu repositorio.
@@ -71,14 +72,20 @@ Pasos a seguir:
         AWS_ACCESS_KEY_ID_Tunombre: El valor debe ser tu AWS_ACCESS_KEY_ID de AWS.
         AWS_SECRET_ACCESS_KEY_Tunombre: El valor debe ser tu AWS_SECRET_ACCESS_KEY de AWS.
         AWS_SESSION_TOKEN_Tunombre: El valor debe ser tu AWS_SESSION_TOKEN de AWS.
-        AWS_EC2_KEY_Tunombre: El valor debe ser el contenido de tu clave privada asociada a la clave pública con la que creas las instancias EC2.
+        AWS_EC2_KEY_Tunombre: El valor debe ser el contenido de tu clave privada asociada a la clave 
+            pública con la que creas las instancias EC2.
 
-    Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu clave privada de EC2, ya que será necesario para crear y gestionar instancias EC2 desde GitHub Actions.
+    Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu clave privada de 
+    EC2, ya que será necesario para crear y gestionar instancias EC2 desde GitHub Actions.
 
 
     ¿Porque hay que hacer todo esto?
 
-    En este bootcamp no nos dan otras herramientas para gestionar nuestras claves privadas y he diseñado el flujo de github actions para que si hacemos todos como grupo push a un mismo repositorio use la clave de quien ha hecho el push y no la de otro compañero (en caso de que usaramos claves de acceso diferentes). NOTA: Igualmente en el contexto del bootcamp todos compartimos las claves de acceso a aws asique como que es un poco indiferente haber hecho este flujo de trabajo
+    En este bootcamp no nos dan otras herramientas para gestionar nuestras claves privadas y he diseñado 
+    el flujo de github actions para que si hacemos todos como grupo push a un mismo repositorio use 
+    la clave de quien ha hecho el push y no la de otro compañero (en caso de que usaramos claves de acceso 
+    diferentes). NOTA: Igualmente en el contexto del bootcamp todos compartimos las claves de acceso a aws 
+    asique como que es un poco indiferente haber hecho este flujo de trabajo
 
 
 
