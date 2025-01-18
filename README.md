@@ -44,7 +44,7 @@ Scripts para ejecutar y eliminar recursos:
 
 
 
-
+### 4. Commandos para recordar
 
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@
 
@@ -52,11 +52,6 @@ terragrunt run-all init  && terragrunt run-all apply --terragrunt-non-interactiv
 
 terragrunt run-all destroy --terragrunt-non-interactive
 
-
 export ANSIBLE_CONFIG=/mnt/e/Campusdual/repo-personal-campus/infra-resources/modules/wordpress/ansible/ansible.cfg
-
-Please modified the terraform/backend.tf , terraform/custom-vars.tfvars and id_rsa.pub if you want to not destroy others infra
-
-Use the scipts ( [] -> denotes optionallity ) run[del].sh and run[del]grunt.sh in order to make your life simply and check that you want to exect this script in the path desired.
 
 
