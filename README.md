@@ -16,14 +16,15 @@ Importante ( [] -> denota opcionalidad )
    ```
 2. Configurar las variables del usuario
 
-Antes de ejecutar los scripts, personaliza la configuración de tu infraestructura según tus necesidades. Para ello, modifica los siguientes archivos:
-2.1 Archivos clave para la configuración:
+Antes de ejecutar los scripts, personaliza la configuración de tu infraestructura según tus necesidades. Para ello, modifica los siguientes archivos.
+
+   2.1. Archivos clave para la configuración:
 
     terraform/backend.tf: Modifica este archivo para configurar un backend diferente para Terraform.
     terraform/custom-vars.tfvars: Personaliza las variables según tu entorno y requisitos específicos.
     id_rsa.pub: Asegúrate de modificar la clave pública para evitar sobrescribir las claves de otros usuarios o infraestructuras.
 
-2.2 Configuración de módulos Terragrunt:
+   2.2. Configuración de módulos Terragrunt:
 
     terragrunt/[modulo]/all-common.hcl: Personaliza este archivo para cada módulo de Terragrunt tu configuración de entorno.
 
