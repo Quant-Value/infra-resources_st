@@ -8,7 +8,7 @@ inputs = {
     module_path_to_import="../../../modules/wordpress"
     module_path=""
     #backend_bucket_name= "proyect-1-stb-devops-bucket"
-    replicas = 1
+    replicas = 2
     db_username="adminsito"
     db_password="poqkljhnasdfiii."
 }
