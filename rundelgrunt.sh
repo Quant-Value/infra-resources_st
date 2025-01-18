@@ -1,3 +1,3 @@
 cd terragrunt/wordpress
-terragrunt run-all destroy -auto-approve
+terragrunt run-all destroy --terragrunt-non-interactive
 
