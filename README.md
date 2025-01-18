@@ -10,25 +10,25 @@ Importante ( [] -> denota opcionalidad )
 - **Automatización:** Scripts para configurar y desplegar la infraestructura.
 
 ## Uso
-1. Clonar el repositorio:
+### 1. Clonar el repositorio:
    ```bash
    git clone https://github.com/<user>/infra-resources.git
    ```
-2. Configurar las variables del usuario
+### 2. Configurar las variables del usuario
 
 Antes de ejecutar los scripts, personaliza la configuración de tu infraestructura según tus necesidades. Para ello, modifica los siguientes archivos.
 
-   2.1. Archivos clave para la configuración:
+#### 2.1. Archivos clave para la configuración:
 
     terraform/backend.tf: Modifica este archivo para configurar un backend diferente para Terraform.
     terraform/custom-vars.tfvars: Personaliza las variables según tu entorno y requisitos específicos.
     id_rsa.pub: Asegúrate de modificar la clave pública para evitar sobrescribir las claves de otros usuarios o infraestructuras.
 
-   2.2. Configuración de módulos Terragrunt:
+#### 2.2. Configuración de módulos Terragrunt:
 
     terragrunt/[modulo]/all-common.hcl: Personaliza este archivo para cada módulo de Terragrunt tu configuración de entorno.
 
-3. Uso de scripts automatizados
+### 3. Uso de scripts automatizados
 
 Para simplificar la gestión de la infraestructura, puedes utilizar los siguientes scripts.
 Scripts para ejecutar y eliminar recursos:
