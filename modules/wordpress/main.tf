@@ -115,10 +115,10 @@ resource "aws_instance" "my_instance" {
       host        = self.public_ip  # La IP pública de la instancia
     }
   }
-  
+  /*
   provisioner "local-exec"{
     command = "echo ${aws_instance.my_instance[count.index].public_ip}  ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa >> ${var.module_path}ansible/hosts.ini"
-  } 
+  } */
 
   tags = {
     Name = "Wordpress-${var.tag_value}-${count.index}"
@@ -205,6 +205,19 @@ resource "null_resource" "update_hosts_ini1" {
   }
 }
 
+resource "null_resource" "update_hosts_ini2" {
+  provisioner "local-exec" {
+    command = "echo \"${join("\n", [for ip in aws_instance.my_instance[*].public_ip : "${ip} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa"])}\" >> ${var.module_path}ansible/hosts.ini"
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  depends_on = [aws_instance.my_instance]  # Esto asegura que las instancias estén creadas antes de ejecutar el local-exec
+}
+
+
 resource "null_resource" "update_rdsvars_ini1" {
   provisioner "local-exec" {
 
@@ -229,7 +242,7 @@ resource "null_resource" "provisioner1" {
     always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
   }
   
-  depends_on = [aws_instance.my_instance]
+  depends_on = [aws_instance.my_instance,null_resource.update_hosts_ini2]
 }
 
 resource "null_resource" "provisioner2" {
