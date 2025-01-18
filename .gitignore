@@ -5,6 +5,4 @@ update_keys.py
 requirements.txt
 .terragrunt-cache
 aws
-*backend.tf
-*custom-vars.tfvars
-*all-common.hcl
+
