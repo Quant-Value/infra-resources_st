@@ -97,11 +97,13 @@ Pasos a seguir:
 
 Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu clave privada de 
     EC2, ya que será necesario para crear y gestionar instancias EC2 desde GitHub Actions.
+>[WARNING]
+>Configura los pasos 2 y 4 para que no existan problemas a la hora de desplegar infraestructura.
 
+>[!NOTE]
+>¿Porque hay que hacer todo esto?
 
-¿Porque hay que hacer todo esto?
-
-En este bootcamp no nos dan otras herramientas para gestionar nuestras claves privadas y he diseñado el flujo de github actions para que si hacemos todos como grupo push a un mismo repositorio use la clave de quien ha hecho el push y no la de otro compañero (en caso de que usaramos claves de acceso diferentes). NOTA: Igualmente en el contexto del bootcamp todos compartimos las claves de acceso a aws asique como que es un poco indiferente haber hecho este flujo de trabajo
+>En este bootcamp no nos dan otras herramientas para gestionar nuestras claves privadas y he diseñado el flujo de github actions para que si hacemos todos como grupo push a un mismo >repositorio use la clave de quien ha hecho el push y no la de otro compañero (en caso de que usaramos claves de acceso diferentes). NOTA: Igualmente en el contexto del bootcamp >todos compartimos las claves de acceso a aws asique como que es un poco indiferente haber hecho este flujo de trabajo
 
 
 
