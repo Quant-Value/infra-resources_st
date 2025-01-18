@@ -8,7 +8,3 @@ aws
 *backend.tf
 *custom-vars.tfvars
 *all-common.hcl
-
-git rm -rf --cached terraform/backend.tf
-git rm -rf --cached terraform/custom-vars.tfvars
-git rm -rf --cached terragrunt/wordpress/all-common.hcl
