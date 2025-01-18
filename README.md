@@ -18,19 +18,22 @@ Importante ( [ ] -> denota opcionalidad )
 
 Antes de ejecutar los scripts, personaliza la configuración de tu infraestructura según tus necesidades. Para ello, modifica los siguientes archivos.
 
+>[!IMPORTANT]
+>Los cambios que estas por realizar solo funcionaran en un repositorio donde subas cambios tu solo.
+
 ### 2.1. Configuración de Módulos Terraform:
 
     Configurar el Backend de Terraform:
-        Modifica el archivo _terraform/backend.tf_ para ajustar la configuración del backend que deseas utilizar para tu infraestructura.
+        Modifica el archivo terraform/backend.tf para ajustar la configuración del backend que deseas utilizar para tu infraestructura.
     Personalización de Variables:
-        Personaliza las variables en el archivo _terraform/custom-vars.tfvars_ según tu entorno y requisitos específicos.
+        Personaliza las variables en el archivo terraform/custom-vars.tfvars según tu entorno y requisitos específicos.
     Modificar la Clave Pública:
-        Asegúrate de actualizar la clave pública en el archivo _id_rsa.pub_ para evitar sobrescribir las claves de otros usuarios o infraestructuras.
+        Asegúrate de actualizar la clave pública en el archivo id_rsa.pub para evitar sobrescribir las claves de otros usuarios o infraestructuras.
 
 ### 2.2. Configuración de Módulos Terragrunt:
 
     Personalización por Módulo de Terragrunt:
-        Personaliza el archivo _terragrunt/[modulo]/all-common.hcl_ para definir la configuración específica de tu entorno para cada módulo de Terragrunt.
+        Personaliza el archivo terragrunt/[modulo]/all-common.hcl para definir la configuración específica de tu entorno para cada módulo de Terragrunt.
 
 ### 3. Uso de scripts automatizados
 
@@ -84,8 +87,10 @@ Pasos a seguir:
 
 Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu clave privada de 
     EC2, ya que será necesario para crear y gestionar instancias EC2 desde GitHub Actions.
->[WARNING]
+
+>[!WARNING]
 >Configura los pasos 2 y 4 para que no existan problemas a la hora de desplegar infraestructura.
+
 
 >[!NOTE]
 >¿Porque hay que hacer todo esto?

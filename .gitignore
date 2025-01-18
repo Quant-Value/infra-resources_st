@@ -5,8 +5,10 @@ update_keys.py
 requirements.txt
 .terragrunt-cache
 aws
-.gitignore
-id_rsa.pub
-terraform/backend.tf
-terraform/custom-vars.tfvars
-terragrunt/wordpress/all-common.hcl
+*backend.tf
+*custom-vars.tfvars
+*all-common.hcl
+
+git rm -rf --cached terraform/backend.tf
+git rm -rf --cached terraform/custom-vars.tfvars
+git rm -rf --cached terragrunt/wordpress/all-common.hcl
