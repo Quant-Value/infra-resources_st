@@ -1,15 +1,4 @@
 services:
-  apache:
-    image: httpd:latest
-    container_name: apache-container
-    ports:
-      - "80:80"
-    volumes:
-      - ./wordpress:/var/www/html  # Carpeta local con los archivos de WordPress (si es necesario)
-    networks:
-      - wordpress_network
-    restart: always
-
   wordpress:
     image: wordpress:latest
     container_name: wordpress-container
@@ -22,12 +11,4 @@ services:
       - ./wordpress:/var/www/html  # Carpeta local con los archivos de WordPress (si es necesario)
     ports:
       - "8080:80"
-    networks:
-      - wordpress_network
     restart: always
-    depends_on:
-      - apache
-
-networks:
-  wordpress_network:
-    driver: bridge
