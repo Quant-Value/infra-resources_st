@@ -5,4 +5,4 @@ update_keys.py
 requirements.txt
 .terragrunt-cache
 aws
-.gitigngore
+*.gitignore
