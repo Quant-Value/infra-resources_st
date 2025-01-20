@@ -53,6 +53,7 @@ jobs:
   deploy:
     needs: prepare
     runs-on: ubuntu-latest
+    environment: prod
 
     # Define una variable de entorno para el directorio de trabajo
     env:
@@ -96,7 +97,7 @@ jobs:
         echo "validate"
         terraform validate
         echo "apply"
-        terraform apply -auto-approve -var-file=custom-vars.tfvars
+        terraform apply -auto-approve -var-file=custom-vars.tfvars -var='tag_value=stb${{vars.ENVIROMENT}}'
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
       env:
           TF_VAR_private_key: ~/.ssh/id_rsa # Pasamos la clave privada como variable de entorno
