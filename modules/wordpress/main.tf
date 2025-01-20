@@ -31,7 +31,7 @@ resource "aws_subnet" "subnet" {
   count = length(data.aws_availability_zones.available.names)
 
   vpc_id                  = data.aws_vpc.default.id
-  cidr_block              = cidrsubnet(data.aws_vpc.default.cidr_block, 8, count.index)
+  cidr_block              = element(["172.31.103.0/24", "172.31.104.0/24", "172.31.105.0/24"], count.index)
   availability_zone       = element(data.aws_availability_zones.available.names, count.index)
   map_public_ip_on_launch = true
   tags = {
