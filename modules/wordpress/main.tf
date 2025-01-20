@@ -23,6 +23,26 @@ data "aws_subnets" "vpc_subnets" {
     values = [data.aws_vpc.default.id]
   }
 }
+#Paso 2.1: Listar zonas de disponibilidad
+data "aws_availability_zones" "available" {}
+
+#Paso 3: Crear siempre 1 subredes por cada az
+resource "aws_subnet" "subnet" {
+  count = length(data.aws_availability_zones.available.names)
+
+  vpc_id                  = data.aws_vpc.default.id
+  cidr_block              = cidrsubnet(data.aws_vpc.default.cidr_block, 8, count.index)
+  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "subnet-${var.tag_value}-${element(data.aws_availability_zones.available.names, count.index)}"
+  }
+}
+
+# Local para almacenar las subredes creadas
+locals {
+  all_subnet_ids = aws_subnet.subnet[*].id  # Lista de IDs de subredes creadas
+}
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Crear un Security Group para EC2
@@ -95,7 +115,8 @@ resource "aws_instance" "my_instance" {
   instance_type   = var.instance_type
   key_name        = aws_key_pair.key.key_name
   #subnet_id       = local.subnet_exists ? values(data.aws_subnet.exist_subnet_details)[0].id : aws_subnet.next_subnet.id
-  subnet_id = data.aws_subnets.vpc_subnets.ids[(count.index+random_integer.example.result) % length(data.aws_subnets.vpc_subnets.ids)]
+  #subnet_id = data.aws_subnets.vpc_subnets.ids[(count.index+random_integer.example.result) % length(data.aws_subnets.vpc_subnets.ids)]
+  subnet_id= local.all_subnet_ids[(count.index+random_integer.example.result) % length(local.all_subnet_ids)]
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true  # Si necesitas acceso público
   disable_api_termination = false
@@ -144,7 +165,7 @@ resource "aws_lb" "my_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups   = [aws_security_group.ec2_sg.id]
-  subnets            = data.aws_subnets.vpc_subnets.ids
+  subnets            = local.all_subnets_ids[*]
 
   enable_deletion_protection = false
 
@@ -160,9 +181,18 @@ resource "aws_lb_target_group_attachment" "my_target_group_attachment" {
   target_id           = aws_instance.my_instance[count.index].id
   port                = 80
 }*/
+resource "aws_db_subnet_group" "my_db_subnet_group" {
+  name        = "my-db-subnet-group-${var.tag_value}"
+  description = "Subnets for RDS instance"
+  subnet_ids  = aws_subnet.subnet[*].id  # Referencia a las subredes existentes
 
+  tags = {
+    Name = "MyDbSubnetGroup-${var.tag_value}"
+  }
+}
 # Crear una base de datos MySQL usando Amazon RDS
 resource "aws_db_instance" "mysql_db" {
+  #count = 0
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   identifier        = "mymysqldb${var.tag_value}"
   engine            = "mysql"
@@ -175,6 +205,7 @@ resource "aws_db_instance" "mysql_db" {
   publicly_accessible = true
   multi_az          = var.replicas>1?true:false
   storage_type      = "gp2"
+  db_subnet_group_name  = aws_db_subnet_group.my_db_subnet_group.name
   #b_subnet_group
 
   tags = {
@@ -211,7 +242,7 @@ resource "null_resource" "update_hosts_ini2" {
 
 resource "null_resource" "update_rdsvars_ini1" {
   provisioner "local-exec" {
-
+    interpreter = ["/bin/bash", "-c"]
     command = "echo rds_username: ${aws_db_instance.mysql_db.username}   > ${var.module_path}ansible/vars.yml && echo rds_password: ${aws_db_instance.mysql_db.password}   >> ${var.module_path}ansible/vars.yml && echo rds_endpoint: ${aws_db_instance.mysql_db.endpoint}   >> ${var.module_path}ansible/vars.yml && echo rds_db_name: ${aws_db_instance.mysql_db.db_name}   >> ${var.module_path}ansible/vars.yml"
 
   }

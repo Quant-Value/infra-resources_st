@@ -105,12 +105,3 @@ output "instance_public_ip" {
   description = "Public IP of the EC2 instance"
   value       = module.ec2_wordpress.ec2_public_ip
 }
-output "rds_user"{
-  value = module.ec2_wordpress.rds_user
-  sensitive=true
-}
-
-output "rds_password"{
-  value = module.ec2_wordpress.rds_password
-  sensitive=true
-}
