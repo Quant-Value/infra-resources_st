@@ -50,6 +50,7 @@ jobs:
   deploy:
     needs: prepare
     runs-on: ubuntu-latest
+    environment: prod
 
     # Define una variable de entorno para el directorio de trabajo
     env:
@@ -92,6 +93,6 @@ jobs:
         export AWS_SECRET_ACCESS_KEY=${{ secrets[env.AWS_SECRET_ACCESS_KEY] }}
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         terraform init
-        terraform destroy -auto-approve -var-file=custom-vars.tfvars
+        terraform destroy -auto-approve -var-file=custom-vars.tfvars -var='tag_value=stb${{vars.ENVIROMENT}}'
       #-backend-config="bucket=${{ secrets.S3_BUCKET_BACKEND }}" -backend-config="region=${{ secrets.AWS_REGION }}"
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
