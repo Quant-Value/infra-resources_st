@@ -102,9 +102,11 @@ Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu 
 
 >PD: En este bootcamp, todos compartimos las mismas claves de acceso a AWS, por lo que, en última instancia, la distinción no afecta demasiado al flujo de trabajo. A pesar de >esto, mantener la clave asociada a cada push es una práctica que podemos aplicar para asegurar la flexibilidad en escenarios más complejos.
 
+### 5. Subnets por persona
 
+Para no pisarnos el trabajo entre nosotros hemos decidido usar un rango de ips para las subnets y mascara. Iz al fichero docs/ips_subnets_reservadas.txt y vereis cuales son las que estan reservadas aunque no esten en uso. Si alguno de los que lee esto falta su nombre ahi que me avise (Salva) y pondremos ahi sus ips para sus subnets. Por ultimo esto debe ser modificado con vuestras ips en el fichero modules/wordpress/main.tf en el recurso subnet, variable cidr_block y dentro de la lista pondreis vuestras ips.
 
-### 5. Commandos para recordar
+### 6. Commandos para recordar
 
 ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@
 
@@ -115,6 +117,6 @@ terragrunt run-all destroy --terragrunt-non-interactive
 export ANSIBLE_CONFIG=/mnt/e/Campusdual/repo-personal-campus/infra-resources/modules/wordpress/ansible/ansible.cfg
 
 
-### 6. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
+### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 
