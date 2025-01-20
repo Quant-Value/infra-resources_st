@@ -27,7 +27,7 @@ Antes de ejecutar los scripts, personaliza la configuración de tu infraestructu
 ### 2.1. Configuración de Módulos Terraform:
 
     Configurar el Backend de Terraform:
-        Modifica el archivo terraform/backend.tf para ajustar la configuración del backend que deseas utilizar para tu infraestructura.
+        Modifica el archivo terraform/backend.tf para ajustar la configuración del backend que deseas utilizar para tu infraestructura. Tambien cambia la variable key si usas el mismo codigo pero en distintas ramas como dev o prod para que guarde el tfstate en distintas localizaciones de tu s3.
     Personalización de Variables:
         Personaliza las variables en el archivo terraform/custom-vars.tfvars según tu entorno y requisitos específicos.
     Modificar la Clave Pública:
