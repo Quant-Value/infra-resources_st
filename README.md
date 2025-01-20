@@ -92,7 +92,7 @@ Nota: Asegúrate de que el secreto AWS_EC2_KEY_Tunombre contenga el valor de tu 
     EC2, ya que será necesario para crear y gestionar instancias EC2 desde GitHub Actions.
 
 >[!WARNING]
->Configura los pasos 2 y 4 para que no existan problemas a la hora de desplegar infraestructura.
+>Configura los pasos 2, 4 y 5 para que no existan problemas a la hora de desplegar infraestructura.
 
 
 >[!NOTE]
