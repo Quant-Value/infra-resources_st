@@ -94,8 +94,6 @@ jobs:
         export AWS_SESSION_TOKEN=${{ secrets[env.AWS_SESSION_TOKEN] }}
         echo "init"
         terraform init
-        echo "validate"
-        terraform validate
         echo "apply"
         terraform apply -auto-approve -var-file=custom-vars.tfvars -var='tag_value=stb${{vars.ENVIROMENT}}'
       working-directory: ${{ env.TF_WORKING_DIR }}  # Usando la variable de entorno
