@@ -45,6 +45,41 @@ locals {
 }
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------
+resource "aws_security_group" "lb_sg" {
+  name        = "lb-sg-${var.tag_value}"
+  description = "Security group for Load Balancer"
+  vpc_id      = data.aws_vpc.default.id
+
+  // Permitir tráfico HTTP en el puerto 80 (entrada de los clientes)
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Permite acceso público desde cualquier lugar
+  }
+
+  // Permitir tráfico HTTP en el puerto 8080 (comunicación entre el Load Balancer y las EC2)
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Permite tráfico entre el Load Balancer y las EC2
+  }
+
+  // Permitir todo el tráfico de salida
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "lb-sg-${var.tag_value}"
+  }
+}
+
+
 # Crear un Security Group para EC2
 resource "aws_security_group" "ec2_sg" {
   name        = "${var.tag_value}-ec2-sg"
@@ -58,18 +93,12 @@ resource "aws_security_group" "ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # O reemplaza con una IP específica si prefieres restringir el acceso
   }
-
-  ingress {
-    from_port   = 80   # Permitir HTTP (NGINX)
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Acceso desde cualquier IP
-  }
+  
   ingress {
     from_port   = 8080   # Permitir HTTP (NGINX)
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Acceso desde cualquier IP
+    security_groups = [aws_security_group.lb_sg.id]  # Acceso desde cualquier IP
   }
 
   # Reglas de salida para permitir todo el tráfico
@@ -141,12 +170,12 @@ resource "aws_instance" "my_instance" {
 # Crear un Target Group para el Load Balancer
 resource "aws_lb_target_group" "my_target_group" {
   name     = "my-target-group-${var.tag_value}"
-  port     = 80
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
   health_check {
-    path = "/"
+    path = "/wp-admin/install.php"
     interval = 30
     timeout = 5
     healthy_threshold = 3
@@ -158,19 +187,44 @@ resource "aws_lb_target_group" "my_target_group" {
   }
 }
 # --------------------------------------   Descomentar si tenemos permisos para crear load balancers --------------------------
-/*
+
 # Crear un Load Balancer
 resource "aws_lb" "my_lb" {
   name               = "my-load-balancer-${var.tag_value}"
   internal           = false
   load_balancer_type = "application"
-  security_groups   = [aws_security_group.ec2_sg.id]
-  subnets            = local.all_subnets_ids[*]
+  security_groups   = [aws_security_group.lb_sg.id]
+  subnets            = local.all_subnet_ids[*]
 
   enable_deletion_protection = false
 
   tags = {
     Name = "my-load-balancer-${var.tag_value}"
+  }
+}
+resource "aws_lb_listener" "my_lb_listener_80" {#cambia los puertos
+  load_balancer_arn = aws_lb.my_lb.arn
+  port              = 80
+  protocol          = "HTTP"
+  default_action{
+    type="redirect"
+    redirect {
+      port        = "8080"
+      protocol    = "HTTP"
+      status_code = "HTTP_301"  # Redirige con un código 301
+    }
+  }
+}
+
+# Crear un Listener para el Load Balancer, asociando el Target Group
+resource "aws_lb_listener" "my_lb_listener" {#reenvia al grupo de destino
+  load_balancer_arn = aws_lb.my_lb.arn
+  port              = 8080
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.my_target_group.arn
   }
 }
 
@@ -179,8 +233,10 @@ resource "aws_lb_target_group_attachment" "my_target_group_attachment" {
   count               = var.replicas
   target_group_arn    = aws_lb_target_group.my_target_group.arn
   target_id           = aws_instance.my_instance[count.index].id
-  port                = 80
-}*/
+  port                = 8080
+}
+
+#------------------------------ db resources -------------------------------------
 resource "aws_db_subnet_group" "my_db_subnet_group" {
   name        = "my-db-subnet-group-${var.tag_value}"
   description = "Subnets for RDS instance"
@@ -260,9 +316,9 @@ resource "null_resource" "provisioner1" {
     command = "export ANSIBLE_CONFIG=${var.module_path}ansible/ansible.cfg && ansible-playbook -i ${var.module_path}ansible/hosts.ini ${var.module_path}ansible/install1.yml"
   }
   # Usar triggers para forzar la ejecución del recurso
-  triggers = {
-    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
-  }
+  #triggers = {
+  #  always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
+  #}
   
   depends_on = [aws_instance.my_instance,null_resource.update_hosts_ini2]
 }
@@ -273,9 +329,9 @@ resource "null_resource" "provisioner2" {
     command = "export ANSIBLE_CONFIG=${var.module_path}ansible/ansible.cfg && ansible-playbook -i ${var.module_path}ansible/hosts.ini ${var.module_path}ansible/php_config.yml"
   }
   # Usar triggers para forzar la ejecución del recurso
-  triggers = {
-    always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
-  }
+  #triggers = {
+  #  always_run = "${timestamp()}"  # Usamos timestamp como valor cambiante
+  #}
   
   depends_on = [null_resource.provisioner1]
 }
