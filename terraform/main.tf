@@ -83,7 +83,7 @@ module "lambda" {
 }
 */
 
-
+/*
 module "ec2_wordpress" {
   source       = "../modules/wordpress"
   instance_type = var.instance_type # Pasa la variable instance_type
@@ -97,11 +97,24 @@ module "ec2_wordpress" {
   db_password=var.db_password
   replicas=var.replicas
 
+}*/
+
+module "nginx-node-mongo" {
+    source       = "../modules/nginx-node-mongo"
+  instance_type = var.instance_type # Pasa la variable instance_type
+  ami_id        = var.ami_id       # Pasa la variable ami_id
+  private_key_path=var.private_key_path
+  tag_value=var.tag_value#########
+  aws_region = var.aws_region
+  public_key_path = var.public_key_path
+  module_path=var.module_path
+  replicas=var.replicas
+
 }
 
 
 
 output "instance_public_ip" {
   description = "Public IP of the EC2 instance"
-  value       = module.ec2_wordpress.ec2_public_ip
+  value       = module.nginx-node-mongo.ec2_public_ip
 }

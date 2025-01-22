@@ -3,104 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Aplicación Web con Docker</title>
-  
-  <!-- Estilos CSS -->
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f4f7fc;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    h1 {
-      color: #007bff;
-      font-size: 36px;
-      margin-bottom: 20px;
-    }
-    p {
-      font-size: 18px;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    #api-response {
-      font-size: 20px;
-      font-weight: bold;
-      color: #28a745;
-      margin-top: 20px;
-    }
-    .loading {
-      color: #ff9800;
-      font-size: 18px;
-    }
-    .error {
-      color: #dc3545;
-      font-size: 18px;
-    }
-    .container {
-      text-align: center;
-      padding: 30px;
-      background-color: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <title>Mi Aplicación Web</title>
 </head>
 <body>
+  <h1>Mi Aplicación Web</h1>
+  <button id="fetch-btn">Obtener Estado de la API</button>
+  <div id="api-response">Esperando respuesta...</div>
 
-  <div class="container">
-    <h1>Bienvenido a mi Aplicación Web</h1>
-    <p>Frontend servido por NGINX, Backend en Node.js y base de datos MongoDB.</p>
-    
-    <button id="fetch-btn">Obtener Estado de la API</button>
-
-    <div id="api-response" class="loading">Esperando respuesta...</div>
-  </div>
-
-  <!-- Script JavaScript -->
   <script>
-    // Al hacer clic en el botón, hacemos la solicitud al backend
+    let loadBalancerUrl = "";
+
+    // Cargar el archivo config.json para obtener la URL del LB
+    fetch('/config.json')
+      .then(response => response.json())
+      .then(data => {
+        loadBalancerUrl = data.load_balancer_url;
+        console.log("URL del Load Balancer cargada:", loadBalancerUrl);
+      })
+      .catch(error => {
+        console.error("Error al cargar config.json:", error);
+      });
+
+    // Al hacer clic en el botón, se realiza la solicitud al backend
     document.getElementById('fetch-btn').addEventListener('click', function() {
-      // Cambiar el texto de carga mientras esperamos la respuesta
       const responseDiv = document.getElementById('api-response');
       responseDiv.textContent = 'Cargando...';
 
-      // Hacemos la solicitud GET al backend
-      fetch('http://localhost:5000/')
-      .then(response => response.text())
-  .then(data => {
-    console.log('Datos recibidos:', data);
-    responseDiv.textContent = data;
-    responseDiv.classList.remove('loading');
-    responseDiv.classList.add('success');
-  })
-  .catch(error => {
-    console.error('Error al conectar con el backend:', error);
-    responseDiv.textContent = 'Error al conectar con el backend.';
-    responseDiv.classList.remove('loading');
-    responseDiv.classList.add('error');
-  });
-
+      // Usar la URL del Load Balancer para hacer el fetch
+      fetch(`${loadBalancerUrl}/backend/status`)
+        .then(response => response.text())
+        .then(data => {
+          console.log('Datos recibidos:', data);
+          responseDiv.textContent = data;
+        })
+        .catch(error => {
+          console.error('Error al conectar con el backend:', error);
+          responseDiv.textContent = 'Error al conectar con el backend.';
+        });
     });
   </script>
-
 </body>
 </html>

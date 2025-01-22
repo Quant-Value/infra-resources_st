@@ -1,7 +1,6 @@
 ---
 - hosts: all
   become: true
-
   tasks:
     - name: Actualizar todos los paquetes a la última versión
       apt:
@@ -9,7 +8,7 @@
         upgrade: dist
         autoremove: yes
         autoclean: yes
-        
+
     - name: Instalar paquetes del sistema necesarios
       apt:
         name:
@@ -55,9 +54,24 @@
           - docker-compose-plugin
         state: latest
 
-    - name: Add remote "ubuntu" user to "docker" group
+    - name: Agregar al usuario "ubuntu" al grupo "docker"
       user:
         name: ubuntu
         groups: docker
         append: yes
-        
+
+    - name: Copiar la carpeta mi_carpeta al destino
+      copy:
+        src: ../app # Ruta de la carpeta local
+        dest: /home/ubuntu/  # Ruta de destino en el servidor remoto
+        owner: ubuntu  # Opcional: Cambia el propietario del archivo/copiar la carpeta
+        group: ubuntu  # Opcional: Cambia el grupo del archivo/carpeta
+        mode: '0644'  # Opcional: Asigna los permisos adecuados
+
+    - name: Stop Docker containers using Docker Compose (v2)
+      ansible.builtin.shell:
+        cmd: docker compose -f /home/ubuntu/app/docker-compose.yml down
+
+    - name: Start Docker containers using Docker Compose (v2)
+      ansible.builtin.shell:
+        cmd: docker compose -f /home/ubuntu/app/docker-compose.yml up -d

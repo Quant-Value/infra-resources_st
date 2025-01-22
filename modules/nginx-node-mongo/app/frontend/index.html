@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Aplicación Web</title>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    /* Caja principal */
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      margin: 20px;
+    }
+
+    h1 {
+      color: #4CAF50;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    /* Estilo para el botón */
+    #fetch-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    #fetch-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* Estilo para el div de respuesta */
+    #api-response {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+      font-size: 1.2em;
+      color: #555;
+      min-height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Estilos para el mensaje de carga */
+    #api-response.loading {
+      color: #ff9800;
+      font-style: italic;
+    }
+
+    /* Estilos para el mensaje de error */
+    #api-response.error {
+      color: #f44336;
+    }
+
+    /* Fondo animado */
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #ff6f61, #4CAF50);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      z-index: -1;
+    }
+
+    /* Animación del fondo */
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="background"></div> <!-- Fondo animado -->
+  
+  <div class="container">
+    <h1>Mi Aplicación Web</h1>
+    <button id="fetch-btn">Obtener Estado de la API</button>
+    <div id="api-response">Esperando respuesta...</div>
+  </div>
+
+  <script>
+    let loadBalancerUrl = "";
+
+    // Cargar el archivo config.json para obtener la URL del LB
+    fetch('/config/config.json')
+      .then(response => response.json())
+      .then(data => {
+        loadBalancerUrl = data.load_balancer_url;
+        console.log("URL del Load Balancer cargada:", loadBalancerUrl);
+      })
+      .catch(error => {
+        console.error("Error al cargar config.json:", error);
+      });
+
+    // Al hacer clic en el botón, se realiza la solicitud al backend
+    document.getElementById('fetch-btn').addEventListener('click', function() {
+      const responseDiv = document.getElementById('api-response');
+      responseDiv.textContent = 'Cargando...';
+      responseDiv.classList.add('loading');
+      responseDiv.classList.remove('error');
+
+      // Usar la URL del Load Balancer para hacer el fetch
+      //fetch(`${loadBalancerUrl}/backend`)
+      fetch(`/backend`)
+      //fetch(`http://backend:5000`)
+        .then(response => response.text())
+        .then(data => {
+          console.log('Datos recibidos:', data);
+          responseDiv.textContent = data;
+          responseDiv.classList.remove('loading');
+        })
+        .catch(error => {
+          console.error('Error al conectar con el backend:', error);
+          responseDiv.textContent = 'Error al conectar con el backend.';
+          responseDiv.classList.remove('loading');
+          responseDiv.classList.add('error');
+        });
+    });
+  </script>
+</body>
+</html>

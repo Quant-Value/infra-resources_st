@@ -1,0 +1,48 @@
+services:
+  # Servicio Frontend: NGINX que sirve los archivos estáticos
+  frontend:
+    image: nginx  # Usa la imagen personalizada de NGINX que creaste previamente
+    container_name: frontend
+    ports:
+      - "80:80"  # Expone el puerto 80 del contenedor al puerto 80 del host
+    volumes:
+      - ./frontend/index.html:/etc/nginx/html/index.html  # Copia los archivos estáticos en el contenedor
+      - ./frontend/config/config.json:/etc/nginx/html/config/config.json
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app-network
+
+  # Servicio Backend: API en Node.js
+  backend:
+    build:
+      context: ./backend  # Ruta al directorio del backend donde está el Dockerfile
+    container_name: backend
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mydatabase  # URI de conexión a MongoDB
+    ports:
+      - "5000:5000"  # Expone el puerto 3000 para la API
+    depends_on:
+      - mongo  # Espera a que MongoDB esté disponible antes de arrancar
+    networks:
+      - app-network
+
+  # Servicio MongoDB: Base de datos MongoDB
+  mongo:
+    image: mongo:5.0  # Usamos la imagen oficial de MongoDB
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root  # Usuario root
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword  # Contraseña root
+    ports:
+      - "27017:27017"  # Expone el puerto 27017
+    volumes:
+      - mongo-data:/data/db  # Volumen para persistir los datos de MongoDB
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:  # Volumen persistente para MongoDB
+    driver: local
+networks:
+  app-network:  # Red de la aplicación, que permite que los servicios se comuniquen entre sí
+    driver: bridge
