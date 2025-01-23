@@ -116,6 +116,8 @@ terragrunt run-all destroy --terragrunt-non-interactive
 
 export ANSIBLE_CONFIG=/mnt/e/Campusdual/repo-personal-campus/infra-resources/modules/wordpress/ansible/ansible.cfg
 
+minikube service nginx-service --url   #expone la ip fuera de wsl.
+
 
 ### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 

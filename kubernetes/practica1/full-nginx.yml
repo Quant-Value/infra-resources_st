@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-full
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf  # Monta el archivo nginx.conf en la ubicación correcta
+              subPath: nginx.conf
+            - name: upload-volume
+              mountPath: /usr/share/nginx/html/uploads  # Directorio donde se almacenan los archivos subidos
+            - name: index-html-volume
+              mountPath: /usr/share/nginx/html/index.html  # Monta el archivo index.html desde el ConfigMap
+              subPath: index.html
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config-map  # Configuración del archivo nginx.conf desde un ConfigMap
+
+        - name: upload-volume
+          persistentVolumeClaim:
+            claimName: nginx-upload-pvc  # Usamos el PVC creado para almacenar los archivos subidos
+
+        - name: index-html-volume
+          configMap:
+            name: nginx-index-html  # Monta el ConfigMap que contiene index.html
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config-map
+data:
+  nginx.conf: |
+    events {
+      worker_connections 1024;
+    }
+    http {
+        server {
+            listen 80;
+            server_name localhost;
+
+            client_max_body_size 10M;  # Tamaño máximo de archivo subido
+
+            location / {
+                root /usr/share/nginx/html;
+                index index.html index.htm;
+            }
+
+            location /upload/ {
+                client_max_body_size 100M;
+                root /usr/share/nginx/html/uploads;  # Ruta donde se almacenan los archivos subidos
+                autoindex on;  # Muestra una lista de archivos subidos (opcional)
+                try_files $uri $uri/ =404;
+            }
+        }
+    }
+
+---
+# PersistentVolume (PV)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-upload-pv
+spec:
+  capacity:
+    storage: 1Gi  # Tamaño del volumen
+  accessModes:
+    - ReadWriteOnce  # Solo un nodo puede acceder al volumen a la vez
+  persistentVolumeReclaimPolicy: Retain  # No borrar el volumen cuando el PVC se borra
+  hostPath:
+    path: "/mnt/data/nginx-upload"  # Ruta en el nodo del clúster para almacenar los archivos
+
+---
+# PersistentVolumeClaim (PVC)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-upload-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Solicitar 1Gi de almacenamiento
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080  # Aquí puedes elegir cualquier puerto entre 30000-32767
+  type: NodePort
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-index-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Subir archivo</title>
+    </head>
+    <body>
+        <h1>Formulario para subir archivos</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <label for="file">Selecciona un archivo:</label>
+            <input type="file" name="file" id="file" required>
+            <br>
+            <input type="submit" value="Subir archivo">
+        </form>
+    </body>
+    </html>

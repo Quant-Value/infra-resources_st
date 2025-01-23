@@ -97,8 +97,13 @@ module "ec2_wordpress" {
   db_password=var.db_password
   replicas=var.replicas
 
-}*/
-
+}
+output "instance_public_ip" {
+  description = "Public IP of the EC2 instance"
+  value       = module.nginx-node-mongo.ec2_public_ip
+}
+*/
+/*
 module "nginx-node-mongo" {
     source       = "../modules/nginx-node-mongo"
   instance_type = var.instance_type # Pasa la variable instance_type
@@ -110,11 +115,17 @@ module "nginx-node-mongo" {
   module_path=var.module_path
   replicas=var.replicas
 
+}*/
+module "first_eks"{
+  source = "../modules/eks"
+  instance_type=var.instance_type
+  private_key_path=var.private_key_path
+  tag_value=var.tag_value
+  public_key_path=var.public_key_path
+  aws_region = var.aws_region
+
 }
 
 
 
-output "instance_public_ip" {
-  description = "Public IP of the EC2 instance"
-  value       = module.nginx-node-mongo.ec2_public_ip
-}
+
