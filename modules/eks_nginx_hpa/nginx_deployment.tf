@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "nginx" {
       }
       spec {
         container {
-          image = "localhost:5000/mi-nginx-personalizado"
+          image = "saltardevops/images:latestv2"
           name  = "nginx"
           port {
             container_port = 80

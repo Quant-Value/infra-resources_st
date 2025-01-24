@@ -115,7 +115,7 @@ module "nginx-node-mongo" {
   module_path=var.module_path
   replicas=var.replicas
 
-}*/
+}*//*
 module "first_eks"{
   source = "../modules/eks"
   instance_type=var.instance_type
@@ -124,6 +124,21 @@ module "first_eks"{
   public_key_path=var.public_key_path
   aws_region = var.aws_region
 
+}*/
+
+module "word_eks"{
+  source = "../modules/eks_wordpress"
+  instance_type=var.instance_type
+  #private_key_path=var.private_key_path
+  tag_value=var.tag_value
+  #public_key_path=var.public_key_path
+  aws_region = var.aws_region
+  replicas=var.replicas
+  db_username=var.db_username
+  db_password=var.db_password
+  vpc_id=var.vpc_id
+  subnets=var.subnets
+  module_path=var.module_path
 }
 
 

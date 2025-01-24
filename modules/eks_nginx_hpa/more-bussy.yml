@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: load-generator-deployment
+  name: lgdv2
 spec:
-  replicas: 5  # Número de réplicas
+  replicas: 6  # Número de réplicas (3 con wget y 3 con ab)
   selector:
     matchLabels:
       app: load-generator
@@ -19,7 +19,7 @@ spec:
           - /bin/sh
           - -c
           - |
-            while true; do
-              ab -n 10000 -c 3000000 http://a23ca4c965b334d70adc426a4739bd78-1276965498.eu-west-3.elb.amazonaws.com/
-              sleep 1
-            done
+              while true; do
+                ab -n 10000000 -c 100000 http://a23ca4c965b334d70adc426a4739bd78-1276965498.eu-west-3.elb.amazonaws.com/
+              done
+            

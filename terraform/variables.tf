@@ -64,4 +64,12 @@ variable "public_key_path" {
 variable "module_path" {
   type        = string
 }
+variable "vpc_id" {
 
+  type        = string
+}
+
+variable "subnets" {
+
+  type        = list
+}

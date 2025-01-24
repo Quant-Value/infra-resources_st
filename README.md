@@ -139,9 +139,14 @@ https://stackoverflow.com/questions/55578271/how-to-horizontal-autoscaler-a-kube
 kubectl get hpa
 
 docker stop $(docker ps -q)
+
+docker build --no-cache -t custom-nginx .
+docker tag custom-nginx:latest saltardevops/test-images:custom-nginx
+docker push saltardevops/test-images:custom-nginx
+
 ### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 ### 8. Algunas guias
-[Repositorio local de imagenes de docker](docs/local-repository.md)
+[Repositorio remoto de imagenes de docker](docs/remote-repository.md)
 
 

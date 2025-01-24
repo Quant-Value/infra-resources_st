@@ -14,7 +14,7 @@ resource "kubernetes_horizontal_pod_autoscaler" "nginx_autoscaler" {
       kind        = "Deployment"
       name        = kubernetes_deployment.nginx.metadata[0].name  # Referencia al nombre del deployment NGINX
     }
-    target_cpu_utilization_percentage = 50 #para no _v1 se usa este parametro.
+    target_cpu_utilization_percentage = 40 #para no _v1 se usa este parametro.
     /*
     metrics {
       type = "Resource"

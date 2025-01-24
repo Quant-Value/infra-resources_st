@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator-deployment
+spec:
+  replicas: 5  # Número de réplicas
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+      - name: load-generator
+        image: httpd:alpine  # Usamos httpd:alpine, que contiene apache2-utils
+        command:
+          - /bin/sh
+          - -c
+          - |
+            while true; do
+              o wget --no-cache -q -O- http://a23ca4c965b334d70adc426a4739bd78-1276965498.eu-west-3.elb.amazonaws.com/
+            done
