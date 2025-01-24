@@ -118,7 +118,27 @@ export ANSIBLE_CONFIG=/mnt/e/Campusdual/repo-personal-campus/infra-resources/mod
 
 minikube service nginx-service --url   #expone la ip fuera de wsl.
 
+aws eks --region eu-west-3 update-kubeconfig --name mi-cluster-stb-facil 
 
+kubectl top pod
+
+kubectl get pods -n kube-system | grep metrics-server
+
+ kubectl logs metrics-server-54bf7cdd6-lgh9k -n kube-system
+
+ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+ kubectl get deployment metrics-server -n kube-system
+
+kubectl api-versions | grep autoscaling
+
+#autoscaling very usefull
+https://www.loft.sh/blog/kubernetes-horizontal-pod-autoscaling
+https://stackoverflow.com/questions/55578271/how-to-horizontal-autoscaler-a-kubernetes-deployment
+
+kubectl get hpa
+
+docker stop $(docker ps -q)
 ### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 

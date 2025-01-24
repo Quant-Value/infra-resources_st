@@ -77,33 +77,33 @@ resource "aws_iam_role" "cluster_role" {
   })
 }
 
+
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.cluster_role.name
 }
 
-resource "aws_iam_role" "eks_node_role" {
-  name = "eks-node-role"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-        Effect   = "Allow"
-        Sid      = ""
-      },
-    ]
-  })
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSVPCResourceController" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.cluster_role.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks_node_policy" {
-  role       = aws_iam_role.eks_node_role.name
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSServicePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+  role       = aws_iam_role.cluster_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.cluster_role.name
+}
+resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.cluster_role.name
 }
+
+
 
 resource "aws_security_group" "node_sg" {
   name        = "node-sg-${var.tag_value}"
@@ -138,7 +138,30 @@ resource "aws_security_group" "node_sg" {
     Name = "node-sg-${var.tag_value}"
   }
 }
+/*
+resource "aws_iam_role" "eks_node_role" {
+  name = "eks-node-role-${var.tag_value}"
 
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_role_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.eks_node_role.name
+}
+*/
+/*
 resource "aws_eks_node_group" "basic_group" {
   cluster_name    = aws_eks_cluster.cluster_1.name
   node_group_name = "${var.tag_value}-group-node"
@@ -155,4 +178,60 @@ resource "aws_eks_node_group" "basic_group" {
     ec2_ssh_key = aws_key_pair.key.key_name
     source_security_group_ids= [aws_security_group.node_sg.id]
   }
+}*/
+
+# Obtener el endpoint y el certificado del clúster EKS
+data "aws_eks_cluster" "cluster_1" {
+  name = aws_eks_cluster.cluster_1.name
 }
+
+data "aws_eks_cluster_auth" "cluster_1" {
+  name = aws_eks_cluster.cluster_1.name
+}
+
+# Configurar el proveedor de Kubernetes con la información del clúster EKS
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster_1.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster_1.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster_1.token
+}
+
+
+
+resource "kubernetes_deployment" "nginx" {
+  metadata {
+    name   = "nginx-deployment"
+    labels = {
+      app = "nginx"
+    }
+  }
+
+  spec {
+    replicas = 2
+
+    selector {
+      match_labels = {
+        app = "nginx"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "nginx"
+        }
+      }
+      spec {
+        container {
+          image = "nginx:latest"
+          name  = "nginx"
+          port {
+            container_port = 80
+          }
+        }
+      }
+    }
+  }
+}
+
+
