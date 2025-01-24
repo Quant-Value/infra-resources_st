@@ -141,4 +141,7 @@ kubectl get hpa
 docker stop $(docker ps -q)
 ### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
+### 8. Algunas guias
+    - [Repositorio local de imagenes de docker](/docs/local-repository.md)
+
 
