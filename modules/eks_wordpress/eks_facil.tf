@@ -32,9 +32,3 @@ module "eks" {
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
-
-
-output "eks_sg_node" {
-  description = "sg"
-  value       = module.eks.aws_security_group.node.id
-}

@@ -1,6 +1,6 @@
 # ------------------------------------------------------- RDS infra  ---------------------------------
 # Crear un Security Group para MySQL (RDS)
-/*
+
 resource "aws_security_group" "rds_sg" {
   name        = "${var.tag_value}-rds-sg"
   description = "Security group for MySQL RDS"
@@ -10,7 +10,7 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 3306  # Puerto por defecto de MySQL
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.node.id]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
