@@ -8,7 +8,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.0"
  
-  cluster_name    = "mi-cluster-stb-facil"
+  cluster_name    = "mi-cluster-${var.tag_value}"
   cluster_version = "1.31"
  
   vpc_id     = var.vpc_id
