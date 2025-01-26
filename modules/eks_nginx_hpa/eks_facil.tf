@@ -1,3 +1,5 @@
+
+/*
 provider "aws" {
   region = "eu-west-3"  # Usamos una variable para la región, que podemos definir en variables.tf
   #profile = "default"
@@ -27,4 +29,4 @@ module "eks" {
     }
   }
 
-}
+}*/

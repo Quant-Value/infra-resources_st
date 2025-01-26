@@ -126,6 +126,10 @@ module "first_eks"{
 
 }*/
 
+
+  
+
+
 module "word_eks"{
   source = "../modules/eks_wordpress"
   instance_type=var.instance_type
