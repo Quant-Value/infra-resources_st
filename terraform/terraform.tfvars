@@ -13,7 +13,7 @@ create_replica= false
 replicas  = 1
 vpc_cidr = "10.17.0.0/16"
 vpc_id="vpc-002427d5be38383d7"
-subnets=["subnet-0db83f9cfe117f3ee", "subnet-0c9cbb71f54b20838","subnet-09e322a40eca323b9"]
+
 #private_key_path = "~/.ssh/id_rsa" # Ruta al archivo .pem de la clave privada
 #backend_bucket_name= "proyect-1-stb-devops-bucket"
 #tag_value="stb"

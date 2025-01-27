@@ -141,7 +141,7 @@ output "node_security_group_id_from_remote_state" {
   value = data.terraform_remote_state.eks.outputs.node_security_group_id
 }*/
 
-
+/*
 module "word_eks"{
   source = "../modules/eks_wordpress"
   instance_type=var.instance_type
@@ -153,6 +153,15 @@ module "word_eks"{
   vpc_id=var.vpc_id
   subnets=var.subnets
   module_path=var.module_path
+}*/
+
+module "nginx_service"{
+  source = "../modules/ecs_provisional_resources"
+  tag_value=var.tag_value
+  aws_region = var.aws_region
+  vpc_id=var.vpc_id
+  subnets=var.subnets
+  #sg=var.sg
 }
 
 

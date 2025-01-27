@@ -74,3 +74,6 @@ variable "subnets" {
   type        = list
 }
 
+variable "sg"{
+    type = list
+}
