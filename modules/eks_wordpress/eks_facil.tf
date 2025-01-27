@@ -1,9 +1,4 @@
 /*
-provider "aws" {
-  region = var.aws_region  # Usamos una variable para la región, que podemos definir en variables.tf
-  #profile = "default"
-  #quitar profile si se compila desde la nube
-}
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -30,7 +25,5 @@ module "eks" {
 
 }
 # Proveedor de Kubernetes usando el config_path de kubeconfig
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
+
 */

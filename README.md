@@ -118,7 +118,7 @@ export ANSIBLE_CONFIG=/mnt/e/Campusdual/repo-personal-campus/infra-resources/mod
 
 minikube service nginx-service --url   #expone la ip fuera de wsl.
 
-aws eks --region eu-west-3 update-kubeconfig --name mi-cluster-stb-facil 
+aws eks --region eu-west-3 update-kubeconfig --name mi-cluster-stb
 
 kubectl top pod
 

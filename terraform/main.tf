@@ -126,16 +126,26 @@ module "first_eks"{
 
 }*/
 
+/*
+data "terraform_remote_state" "eks" {
+  backend = "s3"  # Usa el mismo backend S3 configurado en el proyecto EKS
 
-  
+  config = {
+    bucket = "proyect-1-stb-devops-bucket"
+    key    = "terraform/eks/terraform.tfstate"
+    region = "eu-west-3"
+  }
+
+}
+output "node_security_group_id_from_remote_state" {
+  value = data.terraform_remote_state.eks.outputs.node_security_group_id
+}*/
 
 
 module "word_eks"{
   source = "../modules/eks_wordpress"
   instance_type=var.instance_type
-  #private_key_path=var.private_key_path
   tag_value=var.tag_value
-  #public_key_path=var.public_key_path
   aws_region = var.aws_region
   replicas=var.replicas
   db_username=var.db_username

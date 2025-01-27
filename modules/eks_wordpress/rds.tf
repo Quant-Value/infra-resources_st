@@ -1,5 +1,21 @@
 # ------------------------------------------------------- RDS infra  ---------------------------------
 # Crear un Security Group para MySQL (RDS)
+provider "aws" {
+  region = var.aws_region  # Usamos una variable para la región, que podemos definir en variables.tf
+  #profile = "default"
+  #quitar profile si se compila desde la nube
+}
+
+data "terraform_remote_state" "eks" {
+  backend = "s3"  # Usa el mismo backend S3 configurado en el proyecto EKS
+
+  config = {
+    bucket = "proyect-1-stb-devops-bucket"
+    key    = "terraform/eks/terraform.tfstate"
+    region = "eu-west-3"
+  }
+
+}
 
 resource "aws_security_group" "rds_sg" {
   name        = "${var.tag_value}-rds-sg"
@@ -10,7 +26,8 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 3306  # Puerto por defecto de MySQL
     to_port     = 3306
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    #cidr_blocks = ["0.0.0.0/0"]
+    security_groups= [data.terraform_remote_state.eks.outputs.node_security_group_id]
   }
 
   tags = {

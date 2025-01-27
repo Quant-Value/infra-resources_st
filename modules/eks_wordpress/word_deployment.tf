@@ -1,4 +1,7 @@
 
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
 # Crear el deployment para WordPress
 resource "kubernetes_deployment" "wordpress" {
   metadata {
@@ -68,63 +71,6 @@ resource "kubernetes_deployment" "wordpress" {
   }
 }
 
-
-/*
-resource "kubernetes_deployment" "wordpress" {
-  metadata {
-    name = "wordpress-deployment"
-    labels = {
-      app = "wordpress"
-    }
-  }
-
-  spec {
-    replicas = 2  # Definir el número de réplicas
-
-    selector {
-      match_labels = {
-        app = "wordpress"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = "wordpress"
-        }
-      }
-
-      spec {
-        init_container {
-          name  = "init-config"
-          image = "busybox"  # Usar una imagen ligera para el script de inicialización
-          
-          command = [
-            "sh", "-c",
-            "echo '<?php\n define( \"DB_NAME\", \"${aws_db_instance.mysql_db.db_name}\" );\n define( \"DB_USER\", \"${var.db_username}\" );\n define( \"DB_PASSWORD\", \"${var.db_password}\" );\n define( \"DB_HOST\", \"${aws_db_instance.mysql_db.endpoint}\" );\n define( \"WP_DEBUG\", \"false\" );\n require_once( ABSPATH . \"wp-settings.php\" );' > /var/www/html/wp-config.php"
-          ]
-        }
-
-        container {
-          name  = "wordpress"
-          image = "wordpress:latest"
-          port {
-            container_port = 80  # Puerto en el contenedor
-          }
-          volume_mount {
-            name      = "wordpress-config-volume"
-            mount_path = "/var/www/html"
-          }
-        }
-        volume {
-          name = "wordpress-config-volume"
-          empty_dir {}
-        }
-      }
-    }
-  }
-}*/
-
 # Crear un servicio para exponer el Deployment de WordPress
 resource "kubernetes_service" "wordpress" {
   metadata {
@@ -144,6 +90,8 @@ resource "kubernetes_service" "wordpress" {
     type = "LoadBalancer"  # Para acceder a WordPress desde fuera del clúster
   }
 }
+
+
 
 
 

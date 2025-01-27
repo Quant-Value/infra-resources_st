@@ -3,6 +3,11 @@
 provider "kubernetes" {
   config_path="~/.kube/config"
 }
+provider "aws" {
+  region = "eu-west-3"  # Usamos una variable para la región, que podemos definir en variables.tf
+  #profile = "default"
+  #quitar profile si se compila desde la nube
+}
 
 resource "kubernetes_deployment" "nginx" {
   metadata {

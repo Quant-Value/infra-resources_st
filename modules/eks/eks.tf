@@ -49,3 +49,8 @@ terraform {
     #dynamodb_table = "mi-tabla-dynamodb"             # (Opcional) Usa DynamoDB para el bloqueo del estado (si lo deseas)
   }
 }
+
+output "node_security_group_id" {
+  description = "ID of the node shared security group"
+  value       = try(module.eks.node_security_group_id, null)
+}
