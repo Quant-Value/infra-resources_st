@@ -156,7 +156,7 @@ module "word_eks"{
 }*/
 
 module "nginx_service"{
-  source = "../modules/ecs_provisional_resources"
+  source = "../modules/ecs_resources"
   tag_value=var.tag_value
   aws_region = var.aws_region
   vpc_id=var.vpc_id
