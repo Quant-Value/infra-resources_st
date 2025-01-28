@@ -15,6 +15,7 @@ resource "aws_security_group" "ecs_service_sg" {
     description = "Allow HTTP traffic from ALB"
   }
 
+
   # Regla de salida (permitir todo el tráfico de salida)
   egress {
     from_port   = 0
@@ -52,7 +53,7 @@ resource "aws_ecs_service" "nginx_service" {
 }
 
 resource "aws_ecs_task_definition" "nginx_task" {
-  family                   = "nginx-task"
+  family                   = "nginx-task-${var.tag_value}"
   requires_compatibilities = ["FARGATE"]
   network_mode= "awsvpc"
   cpu         = 256
@@ -62,6 +63,53 @@ resource "aws_ecs_task_definition" "nginx_task" {
     {
       name        = "nginx-container"
       image       = "nginx:latest"
+      cpu         = 256
+      memory      = 512
+      essential   = true
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+    }
+  ])
+}
+
+
+resource "aws_ecs_service" "flask_service" {
+  name            = "flask-service"
+  cluster         = data.terraform_remote_state.ecs.outputs.ecs_cluster_id # Aquí se especifica el cluster donde se ejecutará la tarea
+  task_definition = aws_ecs_task_definition.flask_task.arn
+  desired_count   = 1
+
+  launch_type = "FARGATE"  # Especificamos FARGATE como el tipo de lanzamiento
+
+  network_configuration {
+    subnets          = var.subnets
+    assign_public_ip = true
+
+    security_groups = [aws_security_group.ecs_service_sg.id] # Aquí agregas el security group necesario
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.ecs_targets2.arn
+    container_name   = "flask-container"
+    container_port   = 80
+  }
+
+}
+
+resource "aws_ecs_task_definition" "flask_task" {
+  family                   = "flask-task-${var.tag_value}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode= "awsvpc"
+  cpu         = 256
+  memory      = 512
+
+  container_definitions = jsonencode([
+    {
+      name        = "flask-container"
+      image       = "saltardevops/images:custom-flaskv3"
       cpu         = 256
       memory      = 512
       essential   = true
