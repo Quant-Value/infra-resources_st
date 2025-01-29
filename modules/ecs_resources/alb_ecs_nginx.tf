@@ -57,7 +57,7 @@ resource "aws_lb_target_group" "ecs_targets" {
   target_type="ip"
 
   health_check {
-    interval            = 30
+    interval            = 45
     path                = "/web/"
     port                = "80"
     protocol            = "HTTP"
@@ -79,7 +79,7 @@ resource "aws_lb_target_group" "ecs_targets2" {
   target_type="ip"
 
   health_check {
-    interval            = 30
+    interval            = 45
     path                = "/api"
     port                = "80"
     protocol            = "HTTP"
@@ -100,7 +100,7 @@ resource "aws_lb_target_group" "ecs_targets3" {
   target_type="ip"
 
   health_check {
-    interval            = 30
+    interval            = 45
     path                = "/"
     port                = "80"
     protocol            = "HTTP"

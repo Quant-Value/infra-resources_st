@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Número de réplicas que quieres ejecutar
-REPLICAS=1
-REPLICAS2=20
+REPLICAS=0
+REPLICAS2=80
 # Dirección del servicio de destino
-TARGET_URL="http://a23ca4c965b334d70adc426a4739bd78-1276965498.eu-west-3.elb.amazonaws.com/"
+TARGET_URL="http://ecs-alb-stb-891752077.eu-west-3.elb.amazonaws.com/api"
 
 # Crear contenedores en paralelo
 for i in $(seq 1 $REPLICAS); do
-  docker run -d --rm --name load-generator-$i httpd:alpine /bin/sh -c "apk add --no-cache apache2-utils && while true; do ab -n 10000000 -c 100000 $TARGET_URL; done"
+  docker run -d --rm --name load-generator-$i httpd:alpine /bin/sh -c "apk add --no-cache apache2-utils && while true; do ab -n 100000000 -c 100000 $TARGET_URL; done"
 done
 
 for i in $(seq 1 $REPLICAS2); do

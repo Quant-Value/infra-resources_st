@@ -66,7 +66,7 @@ resource "aws_ecs_task_definition" "nginx_task" {
       name        = "nginx-container"
       image       = data.aws_ssm_parameter.container_image_nginx.value
       #image =  var.custom_nginx
-      cpu         = 256
+      cpu         = 128
       memory      = 512
       essential   = true
       portMappings = [
@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "flask_task" {
       name        = "flask-container"
       image       = data.aws_ssm_parameter.container_image_flask.value
       #image =  var.custom_flask
-      cpu         = 256
+      cpu         = 128
       memory      = 512
       essential   = true
       portMappings = [
@@ -174,7 +174,7 @@ resource "aws_ecs_task_definition" "wp_task" {
     {
       name        = "wp-container"
       image       = "wordpress:latest"
-      cpu         = 256
+      cpu         = 128
       memory      = 512
       essential   = true
       secrets = [
