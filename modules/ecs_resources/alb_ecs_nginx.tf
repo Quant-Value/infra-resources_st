@@ -58,7 +58,7 @@ resource "aws_lb_target_group" "ecs_targets" {
 
   health_check {
     interval            = 30
-    path                = "/"
+    path                = "/web/"
     port                = "80"
     protocol            = "HTTP"
     timeout             = 5
@@ -92,6 +92,27 @@ resource "aws_lb_target_group" "ecs_targets2" {
     Name = "${var.tag_value}ecs-target-group2"
   }
 }
+resource "aws_lb_target_group" "ecs_targets3" {
+  name     = "${var.tag_value}ecs-target-group3"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+  target_type="ip"
+
+  health_check {
+    interval            = 30
+    path                = "/"
+    port                = "80"
+    protocol            = "HTTP"
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+
+  tags = {
+    Name = "${var.tag_value}ecs-target-group3"
+  }
+}
 
 
 # Listener del ALB en el puerto 80
@@ -110,31 +131,7 @@ resource "aws_lb_listener" "my_lb_listener_80" {
   }
 }
 
-# Regla del listener para manejar el path /web y redirigir al grupo de destino ECS
-resource "aws_lb_listener_rule" "my_lb_listener_rule_web_redirect" {
-  listener_arn = aws_lb_listener.my_lb_listener_80.arn
-  priority     = 10  # Prioridad de la regla, asegúrate de que no se solape con otras
-
-  action {
-    type             = "redirect"
-    redirect {
-      status_code = "HTTP_301"
-      protocol    = "HTTP"
-      port        = "80"
-      host        = "#{host}"
-      #path        = "/nginx"  # Redirect to the new path
-      path = "/"
-      #query       = "service=nginx"
-      query ="#{query}" 
-    }
-  }
-
-  condition {
-    path_pattern{
-    values = ["/web*"]
-    }
-  }
-}
+#--------------- Foward rules
 
 resource "aws_lb_listener_rule" "my_lb_listener_rule_web_foward" {
   listener_arn = aws_lb_listener.my_lb_listener_80.arn
@@ -148,35 +145,11 @@ resource "aws_lb_listener_rule" "my_lb_listener_rule_web_foward" {
 
   condition {
     path_pattern{
-    values = ["/"]
+    values = ["/web*"]
     }
   }
 }
-/*
-resource "aws_lb_listener_rule" "my_lb_listener_rule_api_redirect" {
-  listener_arn = aws_lb_listener.my_lb_listener_80.arn
-  priority     = 11  # Prioridad de la regla, asegúrate de que no se solape con otras
 
-  action {
-    type             = "redirect"
-    redirect {
-      status_code = "HTTP_301"
-      protocol    = "HTTP"
-      port        = "5000"
-      host        = "#{host}"
-      path="/"
-      #path        = "/"
-      #query       = "service=flask"  # Aquí puedes conservar el query original
-      query ="#{query}"
-    }
-  }
-
-  condition {
-    path_pattern{
-    values = ["/api*"]
-    }
-  }
-}*/
 
 resource "aws_lb_listener_rule" "my_lb_listener_rule_api_forward" {
   listener_arn = aws_lb_listener.my_lb_listener_80.arn
@@ -190,6 +163,22 @@ resource "aws_lb_listener_rule" "my_lb_listener_rule_api_forward" {
   condition {
     path_pattern{
     values = ["/api*"]
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "my_lb_listener_rule_wp_forward" {
+  listener_arn = aws_lb_listener.my_lb_listener_80.arn
+  priority     = 22  # Prioridad de la regla, asegúrate de que no se solape con otras
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ecs_targets3.arn
+  }
+
+  condition {
+    path_pattern{
+    values = ["/wp-*","/"]
     }
   }
 }

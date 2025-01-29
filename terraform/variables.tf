@@ -77,3 +77,10 @@ variable "subnets" {
 variable "sg"{
     type = list
 }
+
+variable "custom_flask" {
+  type        = string
+}
+variable "custom_nginx" {
+  type        = string
+}

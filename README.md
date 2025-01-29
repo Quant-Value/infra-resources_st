@@ -141,8 +141,26 @@ kubectl get hpa
 docker stop $(docker ps -q)
 
 docker build --no-cache -t custom-nginx .
-docker tag custom-nginx:latest saltardevops/test-images:custom-nginx
-docker push saltardevops/test-images:custom-nginx
+docker tag custom-nginx:latest saltardevops/images:custom-nginx
+docker push saltardevops/images:custom-nginx
+
+
+aws ecr get-login-password --region <tu-region> | docker login --username AWS --password-stdin <aws-account-id>.dkr.ecr.<tu-region>.amazonaws.com
+aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 248189943700.dkr.ecr.eu-west-3.amazonaws.com
+
+#build nginx
+
+docker build --no-cache -t custom-flask .
+docker tag custom-flask:latest 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-flask
+docker push 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-flask
+
+
+#build flask
+
+docker build --no-cache -t custom-nginx .
+docker tag custom-nginx:latest 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-nginx
+docker push 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-nginx
+
 
 ### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 

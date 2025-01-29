@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página interactiva servida desde Flask">
+    <meta name="author" content="Tu Nombre">
+    <title>Página Web Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/api{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="#home">Inicio</a>
+            <a href="#features">Características</a>
+            <a href="#contact">Contacto</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>Bienvenido a Nuestra Página Web</h1>
+        <p>Una página web moderna con diseño responsivo y funcionalidad avanzada.</p>
+        <a href="#contact" class="cta-button">Contáctanos</a>
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature">
+            <h3>Innovación</h3>
+            <p>Desarrollamos soluciones innovadoras para tu negocio.</p>
+        </div>
+        <div class="feature">
+            <h3>Flexibilidad</h3>
+            <p>Adaptamos nuestros servicios a tus necesidades.</p>
+        </div>
+        <div class="feature">
+            <h3>Calidad</h3>
+            <p>Brindamos la mejor calidad en todo lo que hacemos.</p>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <h2>Contacto</h2>
+        <form id="contact-form">
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo electrónico" required>
+            <textarea placeholder="Tu mensaje" rows="5" required></textarea>
+            <button type="submit">Enviar Mensaje</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Tu Empresa | <a href="#">Política de privacidad</a></p>
+    </footer>
+
+    <script src="/api{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+
+</html>

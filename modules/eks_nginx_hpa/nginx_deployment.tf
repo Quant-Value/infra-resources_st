@@ -34,7 +34,7 @@ resource "kubernetes_deployment" "nginx" {
       }
       spec {
         container {
-          image = "saltardevops/images:latestv2"
+          image = "saltardevops/images:latest"
           name  = "nginx"
           port {
             container_port = 80

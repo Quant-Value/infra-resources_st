@@ -161,6 +161,11 @@ module "nginx_service"{
   aws_region = var.aws_region
   vpc_id=var.vpc_id
   subnets=var.subnets
+  db_username=var.db_username
+  db_password=var.db_password
+  replicas=var.replicas
+  custom_nginx=var.custom_nginx
+  custom_flask=var.custom_flask
   #sg=var.sg
 }
 

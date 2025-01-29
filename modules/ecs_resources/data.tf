@@ -8,3 +8,12 @@ data "terraform_remote_state" "ecs" {
   }
 
 }
+
+data "aws_ssm_parameter" "container_image_flask" {
+  name = "/${var.tag_value}/image/flask"
+  depends_on=[aws_ssm_parameter.container_image_flask]
+}
+data "aws_ssm_parameter" "container_image_nginx" {
+  name = "/${var.tag_value}/image/nginx"
+  depends_on=[aws_ssm_parameter.container_image_nginx]
+}
