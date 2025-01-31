@@ -136,6 +136,21 @@ resource "aws_ecs_task_definition" "flask_task" {
     }
   ])
 }
+/*
+data "aws_ecs_task_execution" "flask_exec" {
+  cluster         = data.terraform_remote_state.ecs.outputs.ecs_cluster_id
+  task_definition = aws_ecs_task_definition.flask_task.arn
+  launch_type = "FARGATE"
+  desired_count=1
+
+  enable_execute_command= true
+  network_configuration {
+    subnets          = var.subnets
+    security_groups  = [aws_security_group.ecs_service_sg.id]
+    assign_public_ip = false
+  }
+}*/
+
 #------------- WORDPRESS
 
 

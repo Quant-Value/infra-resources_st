@@ -1,14 +1,35 @@
+provider "aws" {
+  region = local.aws_region  # Usamos una variable para la región, que podemos definir en variables.tf
+
+}
+locals {
+  tag_value="stb"
+  aws_region = "eu-west-2" 
+
+}
+
+terraform {
+  backend "s3" {
+    bucket = "proyect-2-stb-devops-bucket"          # Nombre de tu bucket S3
+    key    = "terraform/ecr/terraform.tfstate"           # Ruta y nombre del archivo de estado dentro del bucket
+    region = "eu-west-2"                           # Región donde está tu bucket S3
+    encrypt = true                                   # Habilita el cifrado en el bucket
+    #dynamodb_table = "mi-tabla-dynamodb"             # (Opcional) Usa DynamoDB para el bloqueo del estado (si lo deseas)
+  }
+}
+
+
 resource "aws_ecr_repository" "my_ecr_repo" {
-name = "${var.tag_value}-my-ecr-repo"
+name = "${local.tag_value}-my-ecr-repo"
 image_tag_mutability = "MUTABLE"
 image_scanning_configuration {
 scan_on_push = true
 }
 }
-/*
+
 output "repository_url" { 
     value = aws_ecr_repository.my_ecr_repo.repository_url 
-}*/
+}
 
 data "aws_iam_policy_document" "example" {
   statement {
@@ -69,16 +90,3 @@ resource "aws_ecr_lifecycle_policy" "my_lifecycle_policy" {
   })
 }
 
-#----------------------------- SSM ---------
-
-resource "aws_ssm_parameter" "container_image_flask" {
-  name  = "/${var.tag_value}/image/flask"
-  type  = "SecureString"  # Usamos String si no necesitamos cifrado, o "SecureString" si lo deseas cifrado.
-  value = var.custom_flask
-}
-
-resource "aws_ssm_parameter" "container_image_nginx" {
-  name  = "/${var.tag_value}/image/nginx"
-  type  = "SecureString"  # Usamos String si no necesitamos cifrado, o "SecureString" si lo deseas cifrado.
-  value = var.custom_nginx
-}

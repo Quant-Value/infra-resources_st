@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: default
+spec:
+  selector:
+    app: nginx  # Selector que coincide con el Deployment de NGINX
+  ports:
+    - protocol: TCP
+      port: 80          # Puerto expuesto en el LoadBalancer
+      targetPort: 80     # Puerto dentro del contenedor (NGINX)
+  type: LoadBalancer     # Tipo de servicio LoadBalancer

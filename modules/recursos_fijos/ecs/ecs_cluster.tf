@@ -4,17 +4,31 @@ provider "aws" {
 }
 locals {
   tag_value="stb"
-  instance_type="t2.small" 
-  aws_region = "eu-west-3" 
-  vpc_id="vpc-002427d5be38383d7"
-  subnets=["subnet-0db83f9cfe117f3ee", "subnet-0c9cbb71f54b20838","subnet-09e322a40eca323b9"]
+  aws_region = "eu-west-2" 
 }
+
+data "terraform_remote_state" "vpc" {
+
+  backend = "s3" 
+  config = {
+    bucket = "proyect-2-stb-devops-bucket"          # Nombre de tu bucket S3 donde está almacenado el estado
+    key    = "terraform/vpc/terraform.tfstate"      # Ruta dentro del bucket
+    region = "eu-west-2"                           # Región donde está tu bucket S3
+  }
+}
+
+locals {
+  vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
+  subnets = [for subnet in data.terraform_remote_state.vpc.outputs.subnets_public_info : subnet.id]
+  #subnets=["subnet-0a047a9f376ca5aea","subnet-08dfb6f51cfc57a18","subnet-00f9f04e1bc9a1499"]
+}
+
 
 terraform {
   backend "s3" {
-    bucket = "proyect-1-stb-devops-bucket"          # Nombre de tu bucket S3
+    bucket = "proyect-2-stb-devops-bucket"          # Nombre de tu bucket S3
     key    = "terraform/ecs/terraform.tfstate"           # Ruta y nombre del archivo de estado dentro del bucket
-    region = "eu-west-3"                           # Región donde está tu bucket S3
+    region = "eu-west-2"                           # Región donde está tu bucket S3
     encrypt = true                                   # Habilita el cifrado en el bucket
     #dynamodb_table = "mi-tabla-dynamodb"             # (Opcional) Usa DynamoDB para el bloqueo del estado (si lo deseas)
   }

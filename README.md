@@ -118,6 +118,7 @@ export ANSIBLE_CONFIG=/mnt/e/Campusdual/repo-personal-campus/infra-resources/mod
 
 minikube service nginx-service --url   #expone la ip fuera de wsl.
 
+#configurar provedor de kubernetes
 aws eks --region eu-west-3 update-kubeconfig --name mi-cluster-stb
 
 kubectl top pod
@@ -144,23 +145,43 @@ docker build --no-cache -t custom-nginx .
 docker tag custom-nginx:latest saltardevops/images:custom-nginx
 docker push saltardevops/images:custom-nginx
 
+#ffmpeg
+ffmpeg -i "Sesion 7 2901-20250130 0838-1.mp4" -ss 00:00:00 -t 06:00:00 -c:v copy -c:a copy Sesion7.mkv
 
+#para configurar ecr con docker
 aws ecr get-login-password --region <tu-region> | docker login --username AWS --password-stdin <aws-account-id>.dkr.ecr.<tu-region>.amazonaws.com
 aws ecr get-login-password --region eu-west-3 | docker login --username AWS --password-stdin 248189943700.dkr.ecr.eu-west-3.amazonaws.com
 
-#build nginx
+aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 248189943700.dkr.ecr.eu-west-2.amazonaws.com
+
+#build flask
 
 docker build --no-cache -t custom-flask .
 docker tag custom-flask:latest 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-flask
 docker push 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-flask
 
 
-#build flask
+#build nginx
 
 docker build --no-cache -t custom-nginx .
 docker tag custom-nginx:latest 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-nginx
 docker push 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-nginx
 
+docker tag custom-nginx:latest 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:custom-nginx
+docker push 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:custom-nginx
+
+#dia 31 chatbot
+
+aws eks --region eu-west-2 update-kubeconfig --name mi-cluster-stb
+
+docker build --no-cache -t chat-bot .
+docker tag chat-bot:latest 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:chat-bot
+docker push 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:chat-bot
+
+#escalado con request
+#estresor mejor hasta el momento
+
+wrk -t8 -c8000 -d300s http://ecs-alb-stb-891752077.eu-west-3.elb.amazonaws.com/api
 
 ### 7. Beauty readme [docs](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
