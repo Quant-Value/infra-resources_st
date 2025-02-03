@@ -1,0 +1,32 @@
+name: Build_chatbot
+
+on:
+  push:
+    branches:
+      - main        # Define la rama en la que quieres que se ejecute (por ejemplo, "main")
+    paths:
+      - 'docker_images/node_dia_31/**'  # Reemplaza con la ruta de la carpeta que te interesa
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chequear repositorio
+        uses: actions/checkout@v3
+
+      - name: Loguearse en Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Construir imagen Docker
+        run: |
+          cd docker_images/node_dia_31
+          docker build --no-cache -t chat-bot .
+      
+      - name: Etiquetar imagen Docker
+        run: |
+          docker tag chat-bot:latest 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:chat-bot
+
+      - name: Push de imagen a ECR
+        run: |
+          docker push 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:chat-bot
