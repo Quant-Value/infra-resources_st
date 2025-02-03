@@ -1,0 +1,33 @@
+name: Deploy chatapp
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Check out repository
+          uses: actions/checkout@v3
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
+          with:
+            aws-region: eu-west-2
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}   # Referencia al secreto
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   # Referencia al secreto
+            aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Si es necesario (solo para credenciales temporales)
+
+        - name: Set up Terraform
+          uses: hashicorp/setup-terraform@v1
+        
+              # Actualizar el kubeconfig de EKS para kubectl
+        - name: Update kubeconfig for EKS
+          run: |
+            aws eks --region eu-west-2 update-kubeconfig --name mi-cluster-stb
+        - name: Update eks task
+          run: |
+            cd chat_app
+            terraform init
+            terraform delete -auto-approve
