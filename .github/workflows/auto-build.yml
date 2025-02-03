@@ -19,6 +19,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
           aws-region: eu-west-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}   # Referencia al secreto
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   # Referencia al secreto
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Si es necesario (solo para credenciales temporales)
 
       - name: Loguearse en Amazon ECR
         id: login-ecr
