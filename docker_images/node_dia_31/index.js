@@ -6,8 +6,18 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+app.use(express.static('public'));
+
 app.get('/', (req, res) => {
   res.send('Chat app is running!');
+});
+
+app.get('/treasure', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
+
+server.listen(3000, () => {
+  console.log('Chat app listening on port 3000');
 });
 
 io.on('connection', (socket) => {
@@ -21,15 +31,5 @@ io.on('connection', (socket) => {
     console.log('User disconnected');
   });
 });
-
-server.listen(3000, () => {
-  console.log('Chat app listening on port 3000');
-});
-
-
-app.get('/treasure', (req, res) => {
-  res.send('You won a magic travel around the goblins world treasure!!');
-});
-
 
 
