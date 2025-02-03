@@ -28,6 +28,6 @@ jobs:
             aws eks --region eu-west-2 update-kubeconfig --name mi-cluster-stb
         - name: Update eks task
           run: |
-            cd chat_app
+            cd chat_app/terraform
             terraform init
             terraform delete -auto-approve
