@@ -11,10 +11,13 @@ const io = socketIo(server);
 app.get('/', (req, res) => {
   res.send('Chat app is running!');
 });
-
+/*
 // Ruta para el "tesoro" que sirve el archivo index.html
 app.get('/treasure', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));  // Correcta concatenación de la ruta
+});*/
+app.get('/treasure',(req,res) =>{
+  res.send('Mensaje de prueba')
 });
 
 // Iniciar el servidor en todas las interfaces de red
