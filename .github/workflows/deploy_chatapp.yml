@@ -32,6 +32,7 @@ jobs:
         - name: Update eks task
           run: |
             cd chat_app/terraform
+            sleep 10
             terraform init
             terraform destroy -auto-approve
             terraform apply -auto-approve
