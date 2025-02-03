@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/treasure', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + 'index.html');
 });
 
 server.listen(3000, () => {
