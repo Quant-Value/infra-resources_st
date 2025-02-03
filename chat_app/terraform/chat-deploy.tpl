@@ -4,7 +4,7 @@ metadata:
   name: chat-app-deployment
   namespace: default
 spec:
-  replicas: 3 
+  replicas: 2 
   selector:
     matchLabels:
       app: chat-app
