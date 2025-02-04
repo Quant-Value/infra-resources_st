@@ -21,11 +21,11 @@ jobs:
         run: |
             sudo apt-get install yamllint
             yamllint ./chat_app/example.yaml
-            - name: Print yamllint result
-            run: |
-              if yamllint ./chat_app/example.yaml; then
-                echo "YAML validation passed!"
-              else
-                echo "YAML validation failed!"
-              fi
+      - name: Print yamllint result
+        run: |
+          if yamllint ./chat_app/example.yaml; then
+            echo "YAML validation passed!"
+          else
+            echo "YAML validation failed!"
+          fi
           
