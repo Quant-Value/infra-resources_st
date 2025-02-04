@@ -1,4 +1,4 @@
-name: Deploy chatapp
+name: Destroy chatapp
 
 on:
   workflow_dispatch:
