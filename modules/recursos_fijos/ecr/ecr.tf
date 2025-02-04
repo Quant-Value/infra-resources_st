@@ -58,6 +58,22 @@ data "aws_iam_policy_document" "example" {
       "ecr:DeleteRepositoryPolicy",
     ]
   }
+  statement {
+    sid    = "ECRAccessForEKSNodes"
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+
+    actions = [
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:ListImages"
+    ]
+  }
 }
 
 resource "aws_ecr_repository_policy" "example" {
