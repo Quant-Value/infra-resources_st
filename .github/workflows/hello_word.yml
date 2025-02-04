@@ -20,5 +20,5 @@ jobs:
       - name: Validate YAML Files
         run: |
             sudo apt-get install yamllint
-            yamllint ./kubernetes/practica1
+            yamllint ./chat_app
           

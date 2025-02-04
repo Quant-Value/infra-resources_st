@@ -71,3 +71,13 @@ output "node_security_group_id" {
   description = "ID of the node shared security group"
   value       = try(module.eks.node_security_group_id, null)
 }
+
+resource "aws_iam_role_policy_attachment" "eks_node_ecr" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.eks_node_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_ecr_docker" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonECRDockerCredentialsProvider"
+  role       = aws_iam_role.eks_node_role.name
+}
