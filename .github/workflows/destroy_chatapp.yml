@@ -30,4 +30,4 @@ jobs:
           run: |
             cd chat_app/terraform
             terraform init
-            terraform delete -auto-approve
+            terraform destroy -auto-approve
