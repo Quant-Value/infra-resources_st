@@ -1,5 +1,9 @@
 # Infra Resources
 
+[![Hello World Workflow](https://github.com/Salvadortarrio/infra-resources/actions/workflows/hello_word.yml/badge.svg)](https://github.com/Salvadortarrio/infra-resources/actions/workflows/hello_word.yml)
+
+
+
 Este repositorio contiene los recursos necesarios para la infraestructura base del proyecto. Aquí se definen las configuraciones y scripts necesarios para implementar y gestionar la infraestructura utilizando herramientas de Infraestructura como Código (IaC).
 
 Importante ( [ ] -> denota opcionalidad ) 
