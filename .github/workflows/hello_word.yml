@@ -1,0 +1,20 @@
+name: Hello World Workflow
+
+# Este workflow se ejecuta en cada push al repositorio
+on:
+  workflow_dispatch:
+
+jobs:
+  hello-world-job:
+    runs-on: ubuntu-latest  # Este es el sistema operativo donde se ejecutará el job
+
+    steps:
+      # Checkout del código
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step para ejecutar un comando "Hello World"
+      - name: Run Hello World script
+        run: |
+          echo "Hello World from GitHub Actions!"
+          

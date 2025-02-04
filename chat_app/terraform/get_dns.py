@@ -2,10 +2,11 @@
 import sys
 import subprocess
 import json
+from time import sleep
 
 # Obtener el nombre del servicio del argumento
 service_name = sys.argv[1]
-
+sleep(10)
 # Ejecutar el comando kubectl
 result = subprocess.run(
     ["kubectl", "get", "svc", service_name, "-o", "jsonpath='{.status.loadBalancer.ingress[0].hostname}'"],
