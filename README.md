@@ -167,6 +167,7 @@ docker build --no-cache -t custom-nginx .
 docker tag custom-nginx:latest 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-nginx
 docker push 248189943700.dkr.ecr.eu-west-3.amazonaws.com/stb-my-ecr-repo:custom-nginx
 
+docker build --no-cache -t custom-nginx .
 docker tag custom-nginx:latest 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:custom-nginx
 docker push 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:custom-nginx
 
