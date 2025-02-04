@@ -16,6 +16,7 @@ spec:
       containers:
       - name: chat-app
         image: ${ecr_url} 
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:

@@ -17,4 +17,8 @@ jobs:
       - name: Run Hello World script
         run: |
           echo "Hello World from GitHub Actions!"
+      - name: Validate YAML Files
+        run: |
+            sudo apt-get install yamllint
+            yamllint ./kubernetes/practica1
           

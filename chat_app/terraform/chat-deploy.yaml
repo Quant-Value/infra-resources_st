@@ -16,6 +16,7 @@ spec:
       containers:
       - name: chat-app
         image: 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:chat-bot
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:
