@@ -9,7 +9,8 @@ COPY package*.json ./
 RUN npm install
 
 # Copiamos todo el código de la aplicación al contenedor desde nuestra carpeta en vs code
-COPY . .
+COPY index.js ./
+COPY index.html ./
 
 # Exponemos el puerto 3000
 EXPOSE 3000

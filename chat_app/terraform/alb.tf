@@ -59,6 +59,7 @@ resource "aws_lb" "my_alb" {
   tags = {
     Name = "${local.tag_value}ecs-alb"
   }
+  depends_on=[kubernetes_manifest.nginx_deployment_service]
 }
 
 # Crear el Target Group
@@ -107,7 +108,7 @@ resource "aws_lb_listener_rule" "my_lb_listener_rule_web_foward" {
   action {
     type             = "redirect"
     redirect {
-      host = "a378f3df40d34440599db87b101c140b-1173671258.eu-west-2.elb.amazonaws.com"  # Dirección IP o dominio al que se redirige
+      host = data.external.get_dns.result["dns"]  # Dirección IP o dominio al que se redirige
       port = "80"                 # Puerto al que redirige (opcional, puedes usar 80 si es HTTP)
       protocol = "HTTP"           # Protocolo (puedes usar "HTTPS" si es necesario)
       status_code = "HTTP_301"    # Código de redirección (301 para redirección permanente)
@@ -120,4 +121,5 @@ resource "aws_lb_listener_rule" "my_lb_listener_rule_web_foward" {
     values = ["/*"]
     }
   }
+  
 }
