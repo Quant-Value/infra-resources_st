@@ -20,5 +20,5 @@ jobs:
       - name: Validate YAML Files
         run: |
             sudo apt-get install yamllint
-            yamllint ./chat_app/chat-app-service.yaml
+            yamllint ./chat_app/example.yaml
           
