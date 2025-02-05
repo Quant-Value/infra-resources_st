@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   chat-app:
-    image: 248189943700.dkr.ecr.eu-west-2.amazonaws.com/stb-my-ecr-repo:chat-bot  # Imagen de ECR
+    image: 248189943700.dkr.ecr.eu-west-2.amazonaws.com/repositorio-grupo-dos:node  # Imagen de ECR
     container_name: chat-app-container
     ports:
       - "3000:3000"

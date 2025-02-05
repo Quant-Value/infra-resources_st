@@ -48,10 +48,21 @@ module "eks" {
       min_size     = 1
  
       instance_types = [local.instance_type]
+
+
+
+      iam_role_additional_policies = {
+        AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        AmazonEc2FullAccess                = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+        CloudWatchLogsFullAccess           = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+        SecretsManagerReadWrite            = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+      }
+
+    }
     }
   }
 
-}
+
 # Proveedor de Kubernetes usando el config_path de kubeconfig
 provider "kubernetes" {
   config_path = "~/.kube/config"
@@ -72,12 +83,3 @@ output "node_security_group_id" {
   value       = try(module.eks.node_security_group_id, null)
 }
 
-resource "aws_iam_role_policy_attachment" "eks_node_ecr" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.eks_node_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_ecr_docker" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonECRDockerCredentialsProvider"
-  role       = aws_iam_role.eks_node_role.name
-}
