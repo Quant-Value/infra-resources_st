@@ -1,4 +1,4 @@
-# Infra Resources
+## Infra Resources
 
 [![Hello World Workflow](https://github.com/Salvadortarrio/infra-resources/actions/workflows/hello_word.yml/badge.svg)](https://github.com/Salvadortarrio/infra-resources/actions/workflows/hello_word.yml)
 
